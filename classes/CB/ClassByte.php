@@ -25,27 +25,27 @@ class ClassByte extends Abstract_ClassByte
 
     private function registerSC(Shortcodes $shortcodes)
     {
-        $this->shortcodes = $shortcodes->__init();
+        $this->shortcodes = $shortcodes;
     }
 
     private function registerWidgets(Widgets $widgets)
     {
-        $this->widget = $widgets->__init();
+        $this->widget = $widgets;
     }
 
     private function registerAdmin(Dashboard $dashboard)
     {
-        $this->dashboard = $dashboard->__init();
+        $this->dashboard = $dashboard;
     }
 
     private function registerPosttypes(Posttypes $posttypes)
     {
-        $this->posttypes = $posttypes->__init();
+        $this->posttypes = $posttypes;
     }
 
     private function registerAPI(API $api)
     {
-        $this->api = $api->__init();
+        $this->api = $api;
         #$r = $this->api->post($this->api->apiurls['courses']['listing'])->jsonDecode();
         #var_dump($r);
     }

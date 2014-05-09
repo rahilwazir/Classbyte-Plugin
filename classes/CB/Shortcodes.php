@@ -5,16 +5,13 @@ if (!defined("ABSPATH")) exit;
 
 class Shortcodes extends Abstract_ClassByte
 {
-    public function __init()
+    public function __construct()
     {
         add_shortcode('cb_class_listing', array($this, 'classListing'));
-
-        return $this;
     }
 
     public function classListing($atts, $content = null)
     {
-        var_dump($this);
         extract(shortcode_atts(array(
 
         ), $atts));

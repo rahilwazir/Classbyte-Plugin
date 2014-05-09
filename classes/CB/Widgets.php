@@ -5,9 +5,8 @@ if (!defined("ABSPATH")) exit;
 
 class Widgets
 {
-    public function __init()
+    public function __construct()
     {
 
-        return $this;
     }
 }

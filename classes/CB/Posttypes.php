@@ -8,12 +8,10 @@ class Posttypes
     public $post_type = "class-schedule";
     public $taxonomy = "courses";
 
-    public function __init()
+    public function __construct()
     {
         add_action('init', array($this, 'registerPostType'));
         add_action('init', array($this, 'registerTaxonomy'));
-
-        return $this;
     }
 
     public function registerPostType()

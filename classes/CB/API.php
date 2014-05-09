@@ -19,7 +19,7 @@ class API extends Abstract_ClassByte
         )
     );
 
-    public function __init()
+    public function __construct()
     {
         $email = get_option('cb_cb_username');
         $apikey = get_option('cb_cb_api');
@@ -30,8 +30,6 @@ class API extends Abstract_ClassByte
             $this->email = $email;
             $this->apikey = $apikey;
         }
-
-        return $this;
     }
 
     public function post($url)
