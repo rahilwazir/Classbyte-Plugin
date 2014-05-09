@@ -3,7 +3,7 @@ namespace CB;
 
 abstract class Abstract_ClassByte
 {
-    private $var = array();
+    protected $var = array();
 
     public function __set($name, $value)
     {

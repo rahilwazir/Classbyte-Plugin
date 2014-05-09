@@ -15,7 +15,6 @@ class ClassByte extends Abstract_ClassByte
         }
 
         $this->registerWidgets(new Widgets());
-        $this->registerAPI(new API());
         $this->registerSC(new Shortcodes());
 
         $this->registerPosttypes(new Posttypes());
@@ -43,13 +42,6 @@ class ClassByte extends Abstract_ClassByte
         $this->posttypes = $posttypes;
     }
 
-    private function registerAPI(API $api)
-    {
-        $this->api = $api;
-        #$r = $this->api->post($this->api->apiurls['courses']['listing'])->jsonDecode();
-        #var_dump($r);
-    }
-
     public function activation()
     {
         if (!PostsPages::exists()) {
@@ -73,14 +65,4 @@ class ClassByte extends Abstract_ClassByte
             'admin_url' => admin_url('admin-ajax.php')
         ));
     }
-
-    /*public function __set($name, $value)
-    {
-        $this->var[$name] = $value;
-    }
-
-    public function __get($name)
-    {
-        return $this->var[$name];
-    }*/
 }
