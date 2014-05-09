@@ -58,7 +58,11 @@ class ClassByte extends Abstract_ClassByte
 
     public function scripts()
     {
-        wp_enqueue_script('cb', plugins_url('js/cb.js', __DIR__), array('jquery'), false, true);
+        wp_enqueue_script('bootstrap-js', CB_URL . 'js/bootstrap.min.js', array('jquery'), false, true);
+        wp_enqueue_script('cb', CB_URL . 'js/cb.js', array('jquery'), false, true);
+
+        wp_enqueue_style('bootstrap-css', CB_URL . 'css/bootstrap.min.css');
+        wp_enqueue_style('bootstrap-theme-css', CB_URL . 'css/bootstrap-theme.min.css');
 
         wp_localize_script('cb', 'cbConfig', array(
             'site_url' => site_url(),

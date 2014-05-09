@@ -31,35 +31,27 @@ class Shortcodes extends Abstract_ClassByte
                     <!-- repeat certificates -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <?php #if (count($course['classes']) > 0) {
-                            #foreach ($course['classes'] as $class) : ?>
-                                <h4 class="panel-title"><?php echo $course['certification_details']['certificate_type']; // . ' ' . $class['coursetypename']; ?></h4>
-                            <?php #endforeach; } ?>
+                            <h4 class="panel-title">
+                                <a href="#collapse<?php echo $course['coursetype'] ?>" data-parent="#accordion" data-toggle="collapse">
+                                    <?php echo $course['coursename']; ?>
+                                </a>
+                            </h4>
                         </div>
-
-                        <div id="collapseID" class="panel-collapse collapse">
+                        <div id="collapse<?php echo $course['coursetype'] ?>" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <h4><strong>Course Description</strong></h4>
-                                <?php
-                                if (count($course['classes']) > 0) {
-                                    foreach ($course['classes'] as $class) :
-                                ?>
                                 <!-- repeat classes -->
                                 <table width="100%"  border="1" class="classdatestable">
                                     <tr>
                                         <td><span class="nostyle">
                                                 <a href="#">
-                                                    <?php echo date("l, F d, Y",strtotime($class['coursedate']));?> at <?php echo date("g:i a",strtotime($class['coursetime']));?>
+                                                    <?php echo date("l, F d, Y",strtotime($course['coursedate']));?> at <?php echo date("g:i a",strtotime($course['coursetime']));?>
                                                 </a>
-                                                <div class="rightaligngreysmall"><?php echo $class['locationcity'] . ', ' . $class['locationstate']; ?></div>
+                                                <div class="rightaligngreysmall"><?php echo $course['location']; ?></div>
                                         </span></td>
                                     </tr>
                                 </table>
                                 <!-- repeat classes -->
-                                <?php
-                                    endforeach;
-                                }
-                                ?>
                             </div>
                         </div>
                     </div>

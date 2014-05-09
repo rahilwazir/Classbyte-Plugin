@@ -12,6 +12,7 @@
 namespace CB;
 
 define('CB_DIR', plugin_dir_path(__FILE__));
+define('CB_URL', trailingslashit(plugins_url('', __FILE__)));
 define('CB_VIEWS', trailingslashit(CB_DIR . 'views'));
 
 include_once CB_DIR . 'functions.php';
