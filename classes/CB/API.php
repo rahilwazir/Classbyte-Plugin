@@ -23,19 +23,24 @@ class API extends Abstract_ClassByte
     {
         $email = get_option('cb_cb_username');
         $apikey = get_option('cb_cb_api');
-
         if (!$email || !$apikey) {
             // error message
         } else {
             $this->email = $email;
             $this->apikey = $apikey;
+
         }
     }
 
     public function post($url)
     {
+        $url = $this->site_url($url);
+
+        if (empty($this->email) || empty($this->apikey))
+            $url = $this->site_url('/no');
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->site_url($url));
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, "{$this->email}:{$this->apikey}");
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -45,7 +50,6 @@ class API extends Abstract_ClassByte
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $this->response = curl_exec($ch);
         curl_close($ch);
-
         return $this;
     }
 

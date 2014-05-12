@@ -5,7 +5,7 @@ if (!defined("ABSPATH")) exit;
 
 class Dashboard
 {
-    public function __init()
+    public function __construct()
     {
         add_action('admin_menu', array($this, 'dashboardMenus'));
 
@@ -44,7 +44,7 @@ class Dashboard
     {
         wp_enqueue_style('jquery-ui-tabs-css', '//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
 
-        wp_enqueue_script('cbAdmin', plugins_url('js/cb_admin.js', __DIR__), array('jquery', 'jquery-ui-tabs'), false, true);
+        wp_enqueue_script('cbAdmin', CB_URL . 'js/cb_admin.js', array('jquery', 'jquery-ui-tabs'), false, true);
 
         wp_localize_script('cbAdmin', 'cbConfig', array(
             'site_url' => site_url(),

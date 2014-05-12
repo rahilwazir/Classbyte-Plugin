@@ -1,7 +1,7 @@
 <?php
 if (!defined('WP_UNINSTALL_PLUGIN')) exit;
 
-include_once 'classes/PostsPages.php';
+include_once 'classes/CB/PostsPages.php';
 
 global $wpdb;
 
@@ -9,4 +9,4 @@ global $wpdb;
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'cb_%'" );
 
 // Delete all posts/pages
-CB_PostsPages::deleteAll();
+PostsPages::deleteAll();

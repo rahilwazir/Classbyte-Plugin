@@ -11,7 +11,7 @@ class ClassByte extends Abstract_ClassByte
         register_deactivation_hook(__DIR__ . basename(__FILE__), array($this, 'deactivation'));
 
         if (is_admin()) {
-            $this->registerAdmin(new Dashboard());
+            new Dashboard();
         }
 
         $this->registerWidgets(new Widgets());
@@ -32,7 +32,7 @@ class ClassByte extends Abstract_ClassByte
         $this->widget = $widgets;
     }
 
-    private function registerAdmin(Dashboard $dashboard)
+    private function registerDashboard(Dashboard $dashboard)
     {
         $this->dashboard = $dashboard;
     }
