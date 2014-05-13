@@ -23,3 +23,7 @@ include_once CB_DIR . 'functions.php';
 include_once CB_DIR . 'autoload.php';
 
 $cb = new ClassByte();
+
+register_activation_hook(__FILE__, array(__NAMESPACE__ . '\ClassByte', 'activation'));
+register_deactivation_hook(__FILE__, array(__NAMESPACE__ . '\ClassByte', 'deactivation'));
+register_uninstall_hook(__FILE__, array(__NAMESPACE__ . '\ClassByte', 'uninstall' ) );

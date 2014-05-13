@@ -7,9 +7,6 @@ class ClassByte extends Abstract_ClassByte
 {
     public function __construct()
     {
-        register_activation_hook(__DIR__ . basename(__FILE__), array($this, 'activation'));
-        register_deactivation_hook(__DIR__ . basename(__FILE__), array($this, 'deactivation'));
-
         if (is_admin()) {
             new Dashboard();
         }
@@ -42,8 +39,11 @@ class ClassByte extends Abstract_ClassByte
         $this->posttypes = $posttypes;
     }
 
-    public function activation()
+    public static function activation()
     {
+        if ( ! current_user_can( 'activate_plugins' ) )
+            return;
+
         if (!PostsPages::exists()) {
             PostsPages::add();
         } else {
@@ -51,9 +51,29 @@ class ClassByte extends Abstract_ClassByte
         }
     }
 
-    public function deactivation()
+    public static function deactivation()
     {
+        if ( ! current_user_can( 'activate_plugins' ) )
+            return;
+
         PostsPages::trashAll();
+    }
+
+    public static function uninstall()
+    {
+        if ( ! current_user_can( 'activate_plugins' ) )
+            return;
+
+        if ( CB_DIR . 'classbyte.php' != WP_UNINSTALL_PLUGIN )
+            return;
+
+        global $wpdb;
+
+        // Remove all the form settings
+        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'cb_%'" );
+
+        // Delete all posts/pages
+        PostsPages::deleteAll();
     }
 
     public function scripts()
