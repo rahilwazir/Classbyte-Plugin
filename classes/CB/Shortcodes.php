@@ -16,7 +16,7 @@ class Shortcodes extends Abstract_ClassByte
 
         ), $atts));
 
-        #API::post(API::$apiurls['courses']['listing']);
+        API::post(API::$apiurls['courses']['listing']);
         API::jsonDecode();
         API::insertCourseClasses();
         $courses = API::$response;

@@ -19,32 +19,12 @@ class API extends Abstract_ClassByte
         )
     );
 
-    public static function __callStatic($method, $args)
-    {
-        $method = get_called_class() . '::' . $method;
-        self::callUnknowMethods($method, $args);
-    }
-
-    private static function callUnknowMethods($method, $args)
-    {
-        $email = get_option('cb_cb_username');
-        $apikey = get_option('cb_cb_api');
-        if (!$email || !$apikey) {
-            // error message
-        } else {
-            self::$email = $email;
-            self::$apikey = $apikey;
-        }
-
-        return call_user_func_array($method, $args);
-    }
-
-    private static function post($url)
+    public static function post($url)
     {
         $url = self::site_url($url);
 
         if (empty(self::$email) || empty(self::$apikey))
-            $url = self::site_url('/auth/verify');
+            $url = self::site_url('/no');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -74,9 +54,9 @@ class API extends Abstract_ClassByte
         #return site_url('/api' . $param);
     }
 
-    private static function insertCourseClasses()
+    public static function insertCourseClasses()
     {
-        if (!self::$response || !isset(self::$response['code'])) return;
+        if (!self::$response || isset(self::$response['code'])) return;
 
         foreach(self::$response as $course) {
             foreach ($course['classes'] as $class) {
