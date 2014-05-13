@@ -19,7 +19,21 @@ class API extends Abstract_ClassByte
         )
     );
 
-    public static function post($url)
+    public static function __callStatic($method, $args)
+    {
+        $email = get_option('cb_cb_username');
+        $apikey = get_option('cb_cb_api');
+        if (!$email || !$apikey) {
+            // error message
+        } else {
+            self::$email = $email;
+            self::$apikey = $apikey;
+        }
+
+        return call_user_func_array(get_called_class() . '::' . $method, $args);
+    }
+
+    private static function post($url)
     {
         $url = self::site_url($url);
 
@@ -58,9 +72,9 @@ class API extends Abstract_ClassByte
     {
         if (!self::$response || isset(self::$response['code'])) return;
 
-        foreach(self::$response as $course) {
+        foreach (self::$response as $course) {
             foreach ($course['classes'] as $class) {
-                $title = $class['coursetypename'] . '_' . date("F-d-Y",strtotime($class['coursedate'])) . '_' . $class['location'] . '_class_' . $class['scheduledcoursesid'];
+                $title = $class['coursetypename'] . '_' . date("F-d-Y", strtotime($class['coursedate'])) . '_' . $class['location'] . '_class_' . $class['scheduledcoursesid'];
 
                 if (Posttypes::postExists($title)) continue;
 
@@ -82,7 +96,7 @@ class API extends Abstract_ClassByte
 
                     update_post_meta($cur_post_id, 'cb_course_location', $class['location']);
 
-                    update_post_meta($cur_post_id, 'cb_course_date_time', date("l, F d, Y",strtotime($class['coursedate'])) . ' at ' . date("g:i a",strtotime($class['coursetime'])));
+                    update_post_meta($cur_post_id, 'cb_course_date_time', date("l, F d, Y", strtotime($class['coursedate'])) . ' at ' . date("g:i a", strtotime($class['coursetime'])));
 
                     $cat = \wp_insert_term($course['course']['course_name'], Posttypes::$taxonomy);
 

@@ -39,9 +39,9 @@ class Posttypes
             'show_ui' => true,
             'show_in_menu' => true, #'edit.php?post_type=' . Children::$post_type,
             'capability_type' => 'post',
-            'map_meta_cap' => true,
+            'map_meta_cap' => false,
             'capabilities' => array(
-                'create_posts' => true
+                'create_posts' => false
             ),
             'rewrite' => array('slug' => 'course'),
             'has_archive' => true,

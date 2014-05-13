@@ -25,7 +25,7 @@
                 </tr>
                 <tr valign="top">
                     <th scope="row"><label for="cb_cb_api">API Key</label></th>
-                    <td><input type="text" name="cb_cb_api" id="cb_cb_api" class="regular-text" value="<?php echo get_option('cb_cb_api'); ?>" />
+                    <td><input type="text" autocomplete="off" name="cb_cb_api" id="cb_cb_api" class="regular-text" value="<?php echo get_option('cb_cb_api'); ?>" />
                     <p class="description">Your API key provided in ClassByte Admin</p>
                     </td>
                 </tr>

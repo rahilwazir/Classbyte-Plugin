@@ -28,7 +28,7 @@ class Shortcodes extends Abstract_ClassByte
                     <?php
 
                     if (Posttypes::havePosts()) {
-                        $courses = Posttypes::queryPosts(); #var_dump($courses);
+                        $courses = Posttypes::queryPosts();
                         foreach ($courses as $course) :
                             ?>
                         <!-- repeat certificates -->
