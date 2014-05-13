@@ -1,4 +1,6 @@
 <?php
+namespace CB;
+
 if (!defined('WP_UNINSTALL_PLUGIN')) exit;
 
 include_once 'classes/CB/PostsPages.php';

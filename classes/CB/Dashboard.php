@@ -44,7 +44,7 @@ class Dashboard
     {
         wp_enqueue_style('jquery-ui-tabs-css', '//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css');
 
-        wp_enqueue_script('cbAdmin', CB_URL . 'js/cb_admin.js', array('jquery', 'jquery-ui-tabs'), false, true);
+        wp_enqueue_script('cbAdmin', ASSETS_URL . 'js/cb_admin.js', array('jquery', 'jquery-ui-tabs'), false, true);
 
         wp_localize_script('cbAdmin', 'cbConfig', array(
             'site_url' => site_url(),

@@ -11,7 +11,7 @@
         <?php settings_fields( 'cb-settings' ); do_settings_sections( 'cb-settings' ); ?>
         <div id="tabs">
             <ul>
-                <li><a href="#main">API Settings</a></li>
+                <li><a href="#main">API</a></li>
                 <li><a href="#pages">Pages</a></li>
                 <li><a href="#styles">Styles</a></li>
             </ul>

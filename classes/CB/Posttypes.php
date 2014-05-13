@@ -5,8 +5,8 @@ if (!defined("ABSPATH")) exit;
 
 class Posttypes
 {
-    public $post_type = "class-schedule";
-    public $taxonomy = "courses";
+    public static $post_type = "class-schedule";
+    public static $taxonomy = "courses";
 
     public function __construct()
     {
@@ -17,9 +17,9 @@ class Posttypes
     public function registerPostType()
     {
         $labels = array(
-            'name' => _x('Classes', $this->post_type),
-            'singular_name' => _x('Class', $this->post_type),
-            'add_new' => _x('Add Class', $this->post_type),
+            'name' => _x('Classes', self::$post_type),
+            'singular_name' => _x('Class', self::$post_type),
+            'add_new' => _x('Add Class', self::$post_type),
             'add_new_item' => __('Add Class'),
             'edit_item' => __('Edit Class'),
             'new_item' => __('New Class'),
@@ -39,26 +39,26 @@ class Posttypes
             'show_ui' => true,
             'show_in_menu' => true, #'edit.php?post_type=' . Children::$post_type,
             'capability_type' => 'post',
-            'map_meta_cap' => false,
+            'map_meta_cap' => true,
             'capabilities' => array(
-                'create_posts' => false
+                'create_posts' => true
             ),
-            'rewrite' => array('slug' => 'book'),
+            'rewrite' => array('slug' => 'course'),
             'has_archive' => true,
             'hierarchical' => true,
-            'menu_icon' => '/images/children.png',
+            'menu_icon' => ASSETS_URL . 'img/courses_icon.png',
             'supports' => array('title', 'editor', 'author', 'thumbnail'),
-            'taxonomies' => array($this->taxonomy),
+            'taxonomies' => array(self::$taxonomy),
         );
 
-        register_post_type($this->post_type, $shows_type);
+        register_post_type(self::$post_type, $shows_type);
     }
 
     public function registerTaxonomy()
     {
         $labels = array(
-            'name' => _x('Courses', $this->taxonomy),
-            'singular_name' => _x('Courses', $this->taxonomy),
+            'name' => _x('Courses', self::$taxonomy),
+            'singular_name' => _x('Courses', self::$taxonomy),
             'search_items' => __('Search Courses'),
             'popular_items' => __('Popular Courses'),
             'all_items' => __('All Courses'),
@@ -72,7 +72,7 @@ class Posttypes
         );
 
         // Now register the non-hierarchical taxonomy like tag
-        register_taxonomy($this->taxonomy, $this->post_type, array(
+        register_taxonomy(self::$taxonomy, self::$post_type, array(
             'hierarchical' => true,
             'labels' => $labels,
             'show_ui' => true,
@@ -83,8 +83,73 @@ class Posttypes
                 'assign_terms' => 'read',
             ),
             'update_count_callback' => '_update_post_term_count',
-            'taxonomies' => array($this->taxonomy),
+            'taxonomies' => array(self::$taxonomy),
             'query_var' => true,
         ));
+    }
+
+    public static function postExists($title)
+    {
+        if (empty($title)) return;
+
+        $post = get_page_by_title($title, OBJECT, self::$post_type);
+
+        if ($post)
+            return true;
+
+        return false;
+    }
+
+    public static function havePosts()
+    {
+        $new_query = new \WP_Query(array(
+            'post_type' => Posttypes::$post_type
+        ));
+
+        if ($new_query->have_posts()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function queryPosts()
+    {
+        if (!self::havePosts()) return;
+
+        $new_query = new \WP_Query(array(
+            'post_type' => Posttypes::$post_type
+        ));
+
+        $all_listing = array();
+
+        while($new_query->have_posts()) : $new_query->the_post();
+            $cat = get_the_terms(get_the_ID(), Posttypes::$taxonomy);
+            $cat_key = array_slice(array_keys($cat), 0, 1);
+            $cat = $cat[$cat_key[0]];
+
+            $result = array (
+                'title' => get_the_title(),
+                'url' => get_the_permalink(),
+                'datetime' => get_post_meta(get_the_ID(), 'cb_course_date_time', true),
+                'location' => get_post_meta(get_the_ID(), 'cb_course_location', true)
+            );
+
+            $key = recursive_array_search($cat->term_id, $all_listing);
+
+            if ($key !== false) {
+                $all_listing[$key]['classes'][] = $result;
+            } else {
+                $all_listing[] = array(
+                    'category' => array(
+                        'cat_name' => $cat->name,
+                        'cat_id' => $cat->term_id,
+                    ),
+                    'classes' => array($result)
+                );
+            }
+        endwhile;
+
+        return $all_listing;
     }
 }

@@ -11,9 +11,13 @@
 
 namespace CB;
 
+// Directory
 define('CB_DIR', plugin_dir_path(__FILE__));
-define('CB_URL', trailingslashit(plugins_url('', __FILE__)));
 define('CB_VIEWS', trailingslashit(CB_DIR . 'views'));
+
+// URLS
+define('CB_URL', trailingslashit(plugins_url('', __FILE__)));
+define('ASSETS_URL', trailingslashit(CB_URL . 'assets'));
 
 include_once CB_DIR . 'functions.php';
 include_once CB_DIR . 'autoload.php';
