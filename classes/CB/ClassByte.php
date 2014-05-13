@@ -64,9 +64,6 @@ class ClassByte extends Abstract_ClassByte
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
 
-        if ( CB_DIR . 'classbyte.php' != WP_UNINSTALL_PLUGIN )
-            return;
-
         global $wpdb;
 
         // Remove all the form settings
