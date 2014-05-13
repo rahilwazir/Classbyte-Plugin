@@ -53,12 +53,11 @@ class PostsPages
         self::unTrashAll();
 
         $cb_post_page_ids = get_option('cb_post_page_ids');
-
-        if (!$cb_post_page_ids)
-            return;
-
-        foreach ($cb_post_page_ids as $id) {
-            wp_delete_post($id, true);
+        
+        if (is_array($cb_post_page_ids)) {
+            foreach ($cb_post_page_ids as $id) {
+                wp_delete_post($id, true);
+            }
         }
 
         $posts = get_posts(array(
