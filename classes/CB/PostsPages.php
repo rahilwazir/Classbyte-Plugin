@@ -62,7 +62,8 @@ class PostsPages
 
         // delete custom post type classes(posts)
         $posts = get_posts(array(
-            'post_type' => Posttypes::$post_type
+            'post_type' => Posttypes::$post_type,
+            'numberposts' => -1
         ));
 
         if (is_array($posts)) {
