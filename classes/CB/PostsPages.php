@@ -64,16 +64,17 @@ class PostsPages
             'post_type' => Posttypes::$post_type
         ));
 
-        foreach($posts as $post) {
-            wp_delete_post($post->ID, true);
+        if (is_array($posts)) {
+            foreach($posts as $post) {
+                $cat = get_the_terms($post->ID, Posttypes::$taxonomy);
+                $cat_key = array_slice(array_keys($cat), 0, 1);
+                $cat = $cat[$cat_key[0]];
 
-            $cat = get_the_terms($post->ID, Posttypes::$taxonomy);
-            $cat_key = array_slice(array_keys($cat), 0, 1);
-            $cat = $cat[$cat_key[0]];
+                wp_delete_term($cat->term_id, Posttypes::$taxonomy);
 
-            wp_delete_term($cat->term_id, Posttypes::$taxonomy);
+                wp_delete_post($post->ID, true);
+            }
         }
-
     }
 
     public static function unTrashAll()
