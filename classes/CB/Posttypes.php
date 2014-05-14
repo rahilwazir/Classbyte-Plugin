@@ -10,11 +10,11 @@ class Posttypes
 
     public function __construct()
     {
-        add_action('init', array($this, 'registerPostType'));
-        add_action('init', array($this, 'registerTaxonomy'));
+        add_action('init', array(__CLASS__, 'registerPostType'));
+        add_action('init', array(__CLASS__, 'registerTaxonomy'));
     }
 
-    public function registerPostType()
+    public static function registerPostType()
     {
         $labels = array(
             'name' => _x('Classes', self::$post_type),
@@ -43,7 +43,10 @@ class Posttypes
             'capabilities' => array(
                 'create_posts' => false
             ),
-            'rewrite' => array('slug' => 'course'),
+            'rewrite' => array(
+                'slug' => __('course'),
+                'with_front' => false
+            ),
             'has_archive' => true,
             'hierarchical' => true,
             'menu_icon' => ASSETS_URL . 'img/courses_icon.png',
@@ -54,7 +57,7 @@ class Posttypes
         register_post_type(self::$post_type, $shows_type);
     }
 
-    public function registerTaxonomy()
+    public static function registerTaxonomy()
     {
         $labels = array(
             'name' => _x('Courses', self::$taxonomy),
