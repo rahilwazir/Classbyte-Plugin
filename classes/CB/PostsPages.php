@@ -60,9 +60,7 @@ class PostsPages
             }
         }
 
-        // delete custom post type terms
-        delete_custom_terms(Posttypes::$taxonomy);
-
+        // delete custom post type classes(posts)
         $posts = get_posts(array(
             'post_type' => Posttypes::$post_type
         ));
@@ -72,6 +70,9 @@ class PostsPages
                 wp_delete_post($post->ID, true);
             }
         }
+
+        // delete custom post type terms
+        delete_custom_terms(Posttypes::$taxonomy);
     }
 
     public static function unTrashAll()

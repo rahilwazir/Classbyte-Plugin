@@ -41,6 +41,8 @@ class ClassByte extends Abstract_ClassByte
 
     public static function activation()
     {
+        global $wp_rewrite;
+
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
 
@@ -49,14 +51,20 @@ class ClassByte extends Abstract_ClassByte
         } else {
             PostsPages::unTrashAll();
         }
+
+        $wp_rewrite->flush_rules();
     }
 
     public static function deactivation()
     {
+        global $wp_rewrite;
+
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
 
         PostsPages::trashAll();
+
+        $wp_rewrite->flush_rules();
     }
 
     public static function uninstall()

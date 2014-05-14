@@ -13,7 +13,7 @@ class Shortcodes extends Abstract_ClassByte
     public function classListing($atts, $content = null)
     {
         extract(shortcode_atts(array(
-
+            'echo' => true
         ), $atts));
 
         API::post(API::$apiurls['courses']['listing']);
@@ -75,7 +75,10 @@ class Shortcodes extends Abstract_ClassByte
     <?php
         $result = ob_get_clean();
 
-        return $result;
+        if (!$echo)
+            return $result;
+
+        echo $result;
     }
 
 }
