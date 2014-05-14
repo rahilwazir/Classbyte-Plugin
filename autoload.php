@@ -3,7 +3,7 @@ namespace CB;
 
 function spl_autoloader($class)
 {
-    $file = CB_DIR . 'classes/' . $class . '.php';
+    $file = CB_DIR . 'classes/' . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
     if (file_exists($file)) {
         include_once $file;

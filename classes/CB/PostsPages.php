@@ -38,7 +38,7 @@ class PostsPages
     public static function trashAll()
     {
         $cb_post_page_ids = get_option('cb_post_page_ids');
-        var_dump($cb_post_page_ids);
+
         if (!$cb_post_page_ids) {
             return;
         }
