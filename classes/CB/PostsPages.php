@@ -48,15 +48,16 @@ class PostsPages
         }
     }
 
-    public static function deleteAll()
+    public static function deleteAll($only_posts = false)
     {
-        self::unTrashAll();
+        if ($only_posts === false) {
+            self::unTrashAll();
+            $cb_post_page_ids = get_option('cb_post_page_ids');
 
-        $cb_post_page_ids = get_option('cb_post_page_ids');
-        
-        if (is_array($cb_post_page_ids)) {
-            foreach ($cb_post_page_ids as $id) {
-                wp_delete_post($id, true);
+            if (is_array($cb_post_page_ids)) {
+                foreach ($cb_post_page_ids as $id) {
+                    wp_delete_post($id, true);
+                }
             }
         }
 

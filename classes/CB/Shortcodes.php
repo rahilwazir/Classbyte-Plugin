@@ -19,14 +19,11 @@ class Shortcodes extends Abstract_ClassByte
         API::post(API::$apiurls['courses']['listing']);
         API::jsonDecode();
         API::insertCourseClasses();
-
-        ob_start();
     ?>
         <div class="reg-page full_width col-md-12">
             <div class="sub_accordian" style="float: left; width: 100% ! important;">
                 <div class="panel-group" id="accordion">
                     <?php
-
                     if (Posttypes::havePosts()) {
                         $courses = Posttypes::queryPosts();
                         foreach ($courses as $course) :
@@ -42,7 +39,10 @@ class Shortcodes extends Abstract_ClassByte
                             </div>
                             <div id="collapse<?php echo $course['category']['cat_id'];; ?>" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <?php if (count($course['classes']) > 2) echo '<h4><strong>Course Description</strong></h4>';
+                                    <?php if ($course['category']['cat_comment']) {
+                                        echo '<h4><strong>Course Description</strong></h4>';
+                                        echo '<h5>'. $course['category']['cat_comment'] . '</h5>';
+                                    }
                                     foreach($course['classes'] as $class) :
                                     ?>
                                     <!-- repeat classes -->
@@ -66,19 +66,12 @@ class Shortcodes extends Abstract_ClassByte
                         <!-- repeat certificates -->
                         <?php
                         endforeach;
-                    } else {
-                        echo '<h3>You have no access to API</h3>';
-                    } ?>
+                    } else { ?>
+                        <h3>You have no access to API</h3>
+                    <?php } ?>
                 </div>
             </div>
         </div>
     <?php
-        $result = ob_get_clean();
-
-        if (!$echo)
-            return $result;
-
-        echo $result;
     }
-
 }

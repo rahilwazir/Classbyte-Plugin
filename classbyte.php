@@ -14,6 +14,7 @@ namespace CB;
 // Directory
 define('CB_DIR', plugin_dir_path(__FILE__));
 define('CB_VIEWS', trailingslashit(CB_DIR . 'views'));
+define('CB_TEMPLATES', trailingslashit(CB_DIR . 'cb_templates'));
 
 // URLS
 define('CB_URL', trailingslashit(plugins_url('', __FILE__)));

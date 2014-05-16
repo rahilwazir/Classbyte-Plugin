@@ -35,6 +35,8 @@ class API extends Abstract_ClassByte
 
     private static function post($url)
     {
+        PostsPages::deleteAll(true);
+
         $url = self::site_url($url);
 
         if (empty(self::$email) || empty(self::$apikey))
@@ -82,7 +84,8 @@ class API extends Abstract_ClassByte
                     'post_title' => $title,
                     'post_status' => 'publish',
                     'post_author' => 1,
-                    'post_type' => Posttypes::$post_type
+                    'post_type' => Posttypes::$post_type,
+                    'comment_status' => 'closed'
                 );
 
                 $cur_post_id = wp_insert_post($my_post);
@@ -97,6 +100,8 @@ class API extends Abstract_ClassByte
                     update_post_meta($cur_post_id, 'cb_course_location', $class['location']);
 
                     update_post_meta($cur_post_id, 'cb_course_date_time', date("l, F d, Y", strtotime($class['coursedate'])) . ' at ' . date("g:i a", strtotime($class['coursetime'])));
+
+                    update_post_meta($cur_post_id, 'cb_course_full_object', $class);
 
                     $cat = \wp_insert_term($course['course']['course_name'], Posttypes::$taxonomy);
 

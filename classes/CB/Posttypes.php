@@ -10,11 +10,13 @@ class Posttypes
 
     public function __construct()
     {
-        add_action('init', array($this, 'registerPostType'));
-        add_action('init', array($this, 'registerTaxonomy'));
+        add_action('init', array(__CLASS__, 'registerPostType'));
+        add_action('init', array(__CLASS__, 'registerTaxonomy'));
+
+        add_filter( 'template_include', array($this, 'include_template_files'));
     }
 
-    public function registerPostType()
+    public static function registerPostType()
     {
         $labels = array(
             'name' => _x('Classes', self::$post_type),
@@ -43,7 +45,10 @@ class Posttypes
             'capabilities' => array(
                 'create_posts' => false
             ),
-            'rewrite' => array('slug' => 'course'),
+            'rewrite' => array(
+                'slug' => __('course'),
+                'with_front' => false
+            ),
             'has_archive' => true,
             'hierarchical' => true,
             'menu_icon' => ASSETS_URL . 'img/courses_icon.png',
@@ -54,7 +59,7 @@ class Posttypes
         register_post_type(self::$post_type, $shows_type);
     }
 
-    public function registerTaxonomy()
+    public static function registerTaxonomy()
     {
         $labels = array(
             'name' => _x('Courses', self::$taxonomy),
@@ -86,6 +91,17 @@ class Posttypes
             'taxonomies' => array(self::$taxonomy),
             'query_var' => true,
         ));
+    }
+
+    public function include_template_files($template)
+    {
+        if (is_singular(self::$post_type)) {
+            $templatefilename = 'single-'. self::$post_type .'.php';
+            $template = CB_TEMPLATES . $templatefilename;
+            return $template;
+        }
+
+        return $template;
     }
 
     public static function postExists($title)
@@ -128,12 +144,19 @@ class Posttypes
             $cat_key = array_slice(array_keys($cat), 0, 1);
             $cat = $cat[$cat_key[0]];
 
-            $result = array (
+            $full_object = get_post_meta(get_the_ID(), 'cb_course_full_object', true);
+            $comment = '';
+            if ($full_object['comments']) {
+                $comment = $full_object['comments'];
+                unset($full_object['comments']);
+            }
+
+            $result = array_merge(array (
                 'title' => get_the_title(),
                 'url' => get_the_permalink(),
                 'datetime' => get_post_meta(get_the_ID(), 'cb_course_date_time', true),
-                'location' => get_post_meta(get_the_ID(), 'cb_course_location', true)
-            );
+                'location' => get_post_meta(get_the_ID(), 'cb_course_location', true),
+            ), $full_object);
 
             $key = recursive_array_search($cat->term_id, $all_listing);
 
@@ -144,6 +167,7 @@ class Posttypes
                     'category' => array(
                         'cat_name' => $cat->name,
                         'cat_id' => $cat->term_id,
+                        'cat_comment' => ($comment) ? $comment : ''
                     ),
                     'classes' => array($result)
                 );
