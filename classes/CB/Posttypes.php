@@ -12,8 +12,11 @@ class Posttypes
     {
         add_action('init', array(__CLASS__, 'registerPostType'));
         add_action('init', array(__CLASS__, 'registerTaxonomy'));
+<<<<<<< HEAD
 
         add_filter( 'template_include', array($this, 'include_template_files'));
+=======
+>>>>>>> 0d8bb0216a85b1c1ad2f3dea273a3933cbbcbc6c
     }
 
     public static function registerPostType()
