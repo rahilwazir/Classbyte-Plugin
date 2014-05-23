@@ -93,3 +93,19 @@ function validate_name($str = '')
 {
     return (preg_match('#^[a-zA-Z\s?]+$#', $str) === 0) ? false : true;
 }
+
+/**
+ * Alias of include construct except it returns instead of output
+ * @param $template string
+ * @param array $data
+ * @return string
+ */
+function return_include_once($template, $data = array())
+{
+    ob_start();
+
+    if ($data && (is_array($data) || is_object($data) )) extract($data);
+
+    include CB_TEMPLATES . $template;
+    return ob_get_clean();
+}

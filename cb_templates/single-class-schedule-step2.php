@@ -88,7 +88,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="studentzip">Zip</label>
+            <label for="studentzip">Zip *</label>
             <input class="form-control" type="text" value="" id="studentzip" name="studentzip">
         </div>
         <div class="form-group">
@@ -100,10 +100,10 @@
             <input class="form-control" type="text" value="" name="studentmobilephone" id="studentmobilephone">
         </div>
         <div class="form-group">
-            <label for="studentemddress">Email Address <span class="color-red">*</span></label>
+            <label for="studentemddress">Email Address *</label>
             <div class="input-group">
                 <span class="input-group-addon"><span class="">@</span></span>
-                <input class="form-control" type="text" style="width:180px;" value="" id="studentemddress" name="studentemddress">
+                <input class="form-control" type="email" value="" id="studentemddress" name="studentemddress">
             </div>
         </div>
         <div class="row">
@@ -127,6 +127,7 @@
             </div>
             <div class="col-lg-6 text-left">
                 <input type="hidden" name="_cb_nonce" value="<?php echo wp_create_nonce('cb_forms-only-ajax'); ?>">
+                <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                 <input type="submit" class="btn" value="Register">
             </div>
         </div>

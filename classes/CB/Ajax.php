@@ -22,11 +22,23 @@ class Ajax
             simplify_serialize_data($form_data);
 
             if (!wp_verify_nonce($form_data['_cb_nonce'], 'cb_forms-only-ajax')) {
-                wp_send_json_error("Invalid Token");
+                wp_send_json_error("Invalid token");
             }
 
             $cb_errors = array();
 
+            /**
+             * Enroll form validation
+             */
+            if ($_POST['form_name'] === "cb_enroll_form") {
+                if (!wp_verify_nonce($form_data['course_token'], $form_data['course_id'])) {
+                    wp_send_json_error("Invalid token");
+                }
+            }
+
+            /**
+             * Register form validation
+             */
             if ($_POST['form_name'] === "cb_reg_form") {
                 $cb_errors['studentsname'] = ($form_data['studentsname'] === '') ? __('required.')
                     : (!validate_name($form_data['studentsname']) ? __('should be alphabetic.') : '');
@@ -34,10 +46,13 @@ class Ajax
                 $cb_errors['studentlastname'] = ($form_data['studentlastname'] === '') ? __('required.')
                     : (!validate_name($form_data['studentlastname']) ? __('should be alphabetic.') : '');
 
+                $cb_errors['studentzip'] = ($form_data['studentzip'] === '') ? __('required.')
+                    : (!is_numeric($form_data['studentzip']) ? __('should contain numbers only.') : '');
+
                 $cb_errors['studentaddress'] = ($form_data['studentaddress'] === '') ? __('required.') : '';
 
                 $cb_errors['studentemddress'] = ($form_data['studentemddress'] === '') ? __('required.')
-                    : (!is_email($form_data['studentlastname']) ? __('not valid.') : '');
+                    : (!is_email($form_data['studentemddress']) ? __('not valid.') : '');
 
                 $cb_errors['studentpassword'] = ($form_data['studentpassword'] === '') ? __('required.') : '';
 
@@ -51,9 +66,21 @@ class Ajax
             if (!empty($cb_errors_clean)) {
                 wp_send_json_error($cb_errors_clean);
             } else {
-                ob_start();
-                include_once CB_TEMPLATES . 'single-class-schedule-step2.php';
-                wp_send_json_success(ob_get_clean());
+                switch ($_POST['form_name']) {
+                    case 'cb_enroll_form':
+                        $data = return_include_once('single-class-schedule-step2.php', $form_data);
+                        wp_send_json_success($data);
+                        break;
+                    case 'cb_reg_form':
+                        API::post(API::$apiurls['sign']['up'], $form_data);
+                        $response = API::$response;
+                        var_dump($response);
+                        #wp_send_json_success($response);
+                        break;
+                    default:
+                        break;
+                }
+                wp_send_json_success();
             }
         }
         exit;
@@ -66,14 +93,10 @@ class Ajax
 
             switch ($_POST['form_of']) {
                 case "cb_login_form":
-                    ob_start();
-                    include_once CB_TEMPLATES . 'single-class-schedule-step2-login.php';
-                    $content = ob_get_clean();
+                    $content = return_include_once('single-class-schedule-step2-login.php');
                     break;
                 case "cb_registration_form":
-                    ob_start();
-                    include_once CB_TEMPLATES . 'single-class-schedule-step2.php';
-                    $content = ob_get_clean();
+                    $content = return_include_once('single-class-schedule-step2.php');
                     break;
                 default:
                     break;

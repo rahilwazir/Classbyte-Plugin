@@ -16,6 +16,8 @@ class Shortcodes
 
         ), $atts));
 
+        PostsPages::deleteAll(true);
+
         API::post(API::$apiurls['courses']['listing'])->jsonDecode()->insertCourseClasses();
     ?>
         <div class="reg-page full_width col-md-12">

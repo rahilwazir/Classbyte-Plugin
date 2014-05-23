@@ -16,6 +16,10 @@ class API
         ),
         'courses' => array(
             'listing' => '/courses/listing'
+        ),
+        'sign' => array(
+            'up' => '/sign/up',
+            'in' => '/sign/in'
         )
     );
 
@@ -32,10 +36,8 @@ class API
         return call_user_func_array(get_called_class() . '::' . $method, $args);
     }
 
-    private static function post($url)
+    protected static function post($url, $data = array())
     {
-        PostsPages::deleteAll(true);
-
         $url = self::site_url($url);
 
         if (!self::$email || !self::$apikey) {
@@ -49,7 +51,7 @@ class API
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array());
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         self::$response = curl_exec($ch);
         curl_close($ch);
