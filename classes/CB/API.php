@@ -3,7 +3,7 @@ namespace CB;
 
 if (!defined("ABSPATH")) exit;
 
-class API extends Abstract_ClassByte
+class API
 {
     private static $email = "";
     private static $apikey = "";
@@ -23,9 +23,8 @@ class API extends Abstract_ClassByte
     {
         $email = get_option('cb_cb_username');
         $apikey = get_option('cb_cb_api');
-        if (!$email || !$apikey) {
-            // error message
-        } else {
+
+        if ($email && $apikey) {
             self::$email = $email;
             self::$apikey = $apikey;
         }
@@ -39,8 +38,9 @@ class API extends Abstract_ClassByte
 
         $url = self::site_url($url);
 
-        if (empty(self::$email) || empty(self::$apikey))
+        if (!self::$email || !self::$apikey) {
             $url = self::site_url('/no');
+        }
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -53,15 +53,17 @@ class API extends Abstract_ClassByte
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         self::$response = curl_exec($ch);
         curl_close($ch);
+
+        return new self;
     }
 
-    public static function jsonDecode()
+    public function jsonDecode()
     {
-        if (!self::$response) {
-            return false;
+        if (self::$response) {
+            self::$response = json_decode(self::$response, true);
         }
 
-        self::$response = json_decode(self::$response, true);
+        return $this;
     }
 
     public static function site_url($param = "")
@@ -70,18 +72,19 @@ class API extends Abstract_ClassByte
         #return site_url('/api' . $param);
     }
 
-    public static function insertCourseClasses()
+    public function insertCourseClasses()
     {
         if (!self::$response || isset(self::$response['code'])) return;
 
         foreach (self::$response as $course) {
             foreach ($course['classes'] as $class) {
-                $title = $class['coursetypename'] . '_' . date("F-d-Y", strtotime($class['coursedate'])) . '_' . $class['location'] . '_class_' . $class['scheduledcoursesid'];
+                $title = $class['coursetypename'] . ' ' . date("F-d-Y", strtotime($class['coursedate'])) . ' ' . $class['location'] . ' Class ' . $class['scheduledcoursesid'];
 
-                if (Posttypes::postExists($title)) continue;
+                #if (Posttypes::postExists($title)) continue;
 
                 $my_post = array(
                     'post_title' => $title,
+                    'post_name' => sanitize_title($title),
                     'post_status' => 'publish',
                     'post_author' => 1,
                     'post_type' => Posttypes::$post_type,
@@ -96,6 +99,8 @@ class API extends Abstract_ClassByte
                     update_post_meta($cur_post_id, 'cb_course_schedule_id', $class['scheduledcoursesid']);
 
                     update_post_meta($cur_post_id, 'cb_course_id', $class['scheduledcoursesid']);
+
+                    update_post_meta($cur_post_id, 'cb_agency', $course['classes'][0]['agency']);
 
                     update_post_meta($cur_post_id, 'cb_course_location', $class['location']);
 

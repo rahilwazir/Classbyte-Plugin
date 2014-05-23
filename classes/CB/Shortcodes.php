@@ -3,7 +3,7 @@ namespace CB;
 
 if (!defined("ABSPATH")) exit;
 
-class Shortcodes extends Abstract_ClassByte
+class Shortcodes
 {
     public function __construct()
     {
@@ -13,12 +13,10 @@ class Shortcodes extends Abstract_ClassByte
     public function classListing($atts, $content = null)
     {
         extract(shortcode_atts(array(
-            'echo' => true
+
         ), $atts));
 
-        API::post(API::$apiurls['courses']['listing']);
-        API::jsonDecode();
-        API::insertCourseClasses();
+        API::post(API::$apiurls['courses']['listing'])->jsonDecode()->insertCourseClasses();
     ?>
         <div class="reg-page full_width col-md-12">
             <div class="sub_accordian" style="float: left; width: 100% ! important;">
@@ -27,13 +25,13 @@ class Shortcodes extends Abstract_ClassByte
                     if (Posttypes::havePosts()) {
                         $courses = Posttypes::queryPosts();
                         foreach ($courses as $course) :
-                            ?>
+                    ?>
                         <!-- repeat certificates -->
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4 class="panel-title">
+                                <h4 class="panel-title no-margin">
                                     <a href="#collapse<?php echo $course['category']['cat_id']; ?>" data-parent="#accordion" data-toggle="collapse">
-                                        <?php echo $course['category']['cat_name'];; ?>
+                                        <?php echo $course['classes'][0]['agency'] . ' ' . $course['classes'][0]['course']; ?>
                                     </a>
                                 </h4>
                             </div>
@@ -67,7 +65,7 @@ class Shortcodes extends Abstract_ClassByte
                         <?php
                         endforeach;
                     } else { ?>
-                        <h3>You have no access to API</h3>
+                        <h3>No classes scheduled yet.</h3>
                     <?php } ?>
                 </div>
             </div>

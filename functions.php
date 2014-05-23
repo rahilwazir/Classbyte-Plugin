@@ -1,12 +1,16 @@
 <?php
 if (!defined("ABSPATH")) exit;
 
+/**
+ * @param $id
+ */
 function store_post_page_ids($id)
 {
     $id = intval(trim($id));
 
-    if (empty($id))
+    if (empty($id)) {
         return;
+    }
 
     $arr = array();
     $cb_post_page_ids = get_option('cb_post_page_ids');
@@ -20,6 +24,12 @@ function store_post_page_ids($id)
     }
 }
 
+/**
+ * Alias of array_search except it searches recursively
+ * @param $needle string
+ * @param $haystack array
+ * @return bool|int|string
+ */
 function recursive_array_search($needle,$haystack)
 {
     foreach($haystack as $key=>$value) {
@@ -31,7 +41,16 @@ function recursive_array_search($needle,$haystack)
     return false;
 }
 
-function delete_custom_terms($taxonomy){
+/**
+ * Delete custom terms and their taxonomy
+ * @param string $taxonomy
+ * @return void
+ */
+function delete_custom_terms($taxonomy)
+{
+    /**
+     * @var wpdb $wpdb
+     */
     global $wpdb;
 
     $query = 'SELECT t.name, t.term_id
@@ -45,4 +64,32 @@ function delete_custom_terms($taxonomy){
     foreach ($terms as $term) {
         wp_delete_term( $term->term_id, $taxonomy );
     }
+}
+
+/**
+ * Simplify serialized array data coming from jQuery Ajax method $.serializeArray()
+ * @param $array array
+ * @return void
+ */
+function simplify_serialize_data(&$array)
+{
+    if (is_array($array) && count($array) > 0) {
+        $new_array = array();
+        foreach ($array as $arr) {
+            if (isset($arr['name'], $arr['value'])) {
+                $new_array[$arr['name']] = sanitize_text_field($arr['value']);
+            }
+        }
+        $array = $new_array;
+    }
+}
+
+/**
+ * Validate Names either first or lastm
+ * @param string $str
+ * @return bool
+ */
+function validate_name($str = '')
+{
+    return (preg_match('#^[a-zA-Z\s?]+$#', $str) === 0) ? false : true;
 }

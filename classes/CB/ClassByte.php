@@ -3,7 +3,7 @@ namespace CB;
 
 if (!defined("ABSPATH")) exit;
 
-class ClassByte extends Abstract_ClassByte
+class ClassByte
 {
     public function __construct()
     {
@@ -11,32 +11,12 @@ class ClassByte extends Abstract_ClassByte
             new Dashboard();
         }
 
-        $this->registerWidgets(new Widgets());
-        $this->registerSC(new Shortcodes());
-
-        $this->registerPosttypes(new Posttypes());
+        new Widgets();
+        new Shortcodes();
+        new Posttypes();
+        new Ajax();
 
         add_action('wp_enqueue_scripts', array($this, 'scripts'));
-    }
-
-    private function registerSC(Shortcodes $shortcodes)
-    {
-        $this->shortcodes = $shortcodes;
-    }
-
-    private function registerWidgets(Widgets $widgets)
-    {
-        $this->widget = $widgets;
-    }
-
-    private function registerDashboard(Dashboard $dashboard)
-    {
-        $this->dashboard = $dashboard;
-    }
-
-    private function registerPosttypes(Posttypes $posttypes)
-    {
-        $this->posttypes = $posttypes;
     }
 
     public static function activation()
@@ -88,6 +68,7 @@ class ClassByte extends Abstract_ClassByte
 
         wp_enqueue_style('bootstrap-css', ASSETS_URL . 'css/bootstrap.min.css');
         wp_enqueue_style('bootstrap-theme-css', ASSETS_URL . 'css/bootstrap-theme.min.css');
+        wp_enqueue_style('main-css', ASSETS_URL . 'css/style.css');
 
         wp_localize_script('cb', 'cbConfig', array(
             'site_url' => site_url(),
