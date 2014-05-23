@@ -54,9 +54,9 @@ var CB = (function($) {
 
                                 $("#" + labels.join(', #')).each(function () {
                                     if (data.data[$(this).prop('id')]) {
-                                        display_errors += '<p>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
-                                        display_errors += ' <strong>' + data.data[$(this).prop('id')] + '</strong>';
-                                        display_errors += '</p>';
+                                        display_errors += '<p><strong>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
+                                        display_errors += ' ' + data.data[$(this).prop('id')];
+                                        display_errors += '</strong></p>';
                                     }
                                 });
 
