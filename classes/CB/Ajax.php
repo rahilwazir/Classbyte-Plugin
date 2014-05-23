@@ -61,6 +61,16 @@ class Ajax
 
             }
 
+            /**
+             * Login form validation
+             */
+            if ($_POST['form_name'] === "cb_login_form") {
+                $cb_errors['cb_login_email'] = ($form_data['cb_login_email'] === '') ? __('required.')
+                    : (!is_email($form_data['cb_login_email']) ? __('not valid.') : '');
+
+                $cb_errors['cb_login_password'] = ($form_data['cb_login_password'] === '') ? __('required.') : '';
+            }
+
             $cb_errors_clean = array_filter($cb_errors);
 
             if (!empty($cb_errors_clean)) {
@@ -72,10 +82,19 @@ class Ajax
                         wp_send_json_success($data);
                         break;
                     case 'cb_reg_form':
-                        API::post(API::$apiurls['sign']['up'], $form_data);
-                        $response = API::$response;
-                        var_dump($response);
-                        #wp_send_json_success($response);
+                        $api_post = API::post(API::$apiurls['sign']['up'], $form_data);
+                        $response = $api_post->jsonDecode()->getResponse();
+                        if (isset($response['success'], $response['data'])) {
+                            if ($response['success'] == true && $response['data'] !== '') {
+                                $data = return_include_once('single-class-schedule-step2-login.php', $response);
+                                wp_send_json_success($data);
+                            } else if ($response['success'] == false && $response['data'] !== '') {
+                                wp_send_json_error($response['data']);
+                            }
+                        }
+                        break;
+                    case 'cb_login_form':
+                        wp_send_json_error("Sorry this feature is yet not implemented.");
                         break;
                     default:
                         break;

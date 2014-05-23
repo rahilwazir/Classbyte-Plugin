@@ -46,20 +46,22 @@ var CB = (function($) {
                         }
                     } else if (data.success == false) {
                         if (data.data !== "") {
-                            var labels = Object.keys(data.data);
                             var display_errors = '<div class="alert alert-danger">';
+                            if (typeof data.data === "string") {
+                                display_errors += '<p>' + data.data + '</p>'
+                            } else {
+                                var labels = Object.keys(data.data);
 
-                            $("#" + labels.join(', #')).each(function () {
-                                //console.log(data.data[$(this).prop('id')], data.data, $(this).prop('id'));
-                                if (data.data[$(this).prop('id')]) {
-                                    display_errors += '<p>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
-                                    display_errors += ' <strong>' + data.data[$(this).prop('id')] + '</strong>';
-                                    display_errors += '</p>';
-                                }
-                            });
+                                $("#" + labels.join(', #')).each(function () {
+                                    if (data.data[$(this).prop('id')]) {
+                                        display_errors += '<p>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
+                                        display_errors += ' <strong>' + data.data[$(this).prop('id')] + '</strong>';
+                                        display_errors += '</p>';
+                                    }
+                                });
 
+                            }
                             display_errors += '</div>';
-
                             cb_form_area.prepend(display_errors);
                         }
                     }

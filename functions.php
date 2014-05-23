@@ -104,7 +104,7 @@ function return_include_once($template, $data = array())
 {
     ob_start();
 
-    if ($data && (is_array($data) || is_object($data) )) extract($data);
+    if (!empty($data) && (is_array($data) || is_object($data) )) extract($data);
 
     include CB_TEMPLATES . $template;
     return ob_get_clean();

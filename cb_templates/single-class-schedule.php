@@ -8,7 +8,7 @@ the_post();
 $fcd = get_post_meta($post->ID, 'cb_course_full_object', true);
 include_once('steps-template.php');
 ?>
-<div id="cb-form-area" class="row">
+<div id="cb-form-area" class="clearfix">
     <div class="col-md-12">
         <div class="headline">
             <h3>

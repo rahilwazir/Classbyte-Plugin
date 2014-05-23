@@ -23,6 +23,11 @@ class API
         )
     );
 
+    public function getResponse()
+    {
+        return self::$response;
+    }
+
     public static function __callStatic($method, $args)
     {
         $email = get_option('cb_cb_username');
