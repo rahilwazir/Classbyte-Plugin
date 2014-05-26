@@ -50,16 +50,20 @@ include_once('steps-template.php');
 
                             <p><?php echo $fcd['location'] . ', ' . $fcd['locationzip']; ?></p></td>
                     </tr>
+                    <?php if ($fcd['notes']) { ?>
                     <tr>
                         <td><strong>Notes</strong></td>
                         <td>
                             <?php echo $fcd['notes']; ?>
                         </td>
                     </tr>
+                    <?php } ?>
+                    <?php if ($fcd['coursecost']) { ?>
                     <tr>
                         <td><strong>Cost</strong></td>
                         <td><h4><?php echo '&dollar;' . $fcd['coursecost']; ?></h4></td>
                     </tr>
+                    <?php } ?>
                     <tr id="action-enroll-btn">
                         <td></td>
                         <td>
