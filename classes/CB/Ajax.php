@@ -94,7 +94,17 @@ class Ajax
                         }
                         break;
                     case 'cb_login_form':
-                        wp_send_json_error("Sorry this feature is yet not implemented.");
+                        $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
+                        $response = $api_post->jsonDecode()->getResponse();
+                        var_dump($response);
+                        exit;
+                        if (isset($response['success'], $response['data'])) {
+                            if ($response['success'] == true && $response['data'] !== '') {
+                                wp_send_json_success($response['data']);
+                            } else if ($response['success'] == false && $response['data'] !== '') {
+                                wp_send_json_error($response['data']);
+                            }
+                        }
                         break;
                     default:
                         break;
