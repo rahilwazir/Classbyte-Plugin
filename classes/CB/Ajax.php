@@ -96,8 +96,6 @@ class Ajax
                     case 'cb_login_form':
                         $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
-                        var_dump($response);
-                        exit;
                         if (isset($response['success'], $response['data'])) {
                             if ($response['success'] == true && $response['data'] !== '') {
                                 wp_send_json_success($response['data']);
