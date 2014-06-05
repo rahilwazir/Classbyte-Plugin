@@ -61,8 +61,8 @@ var CB = (function($) {
                         if (result.data !== "") {
                             var error_data = result.data;
                             var display_errors = '<div class="alert alert-danger">';
-                            if (typeof error_data === "string") {
-                                display_errors += '<p>' + error_data + '</p>'
+                            if (error_data.message) {
+                                display_errors += '<p>' + error_data.message + '</p>'
                             } else {
                                 var labels = Object.keys(error_data);
 

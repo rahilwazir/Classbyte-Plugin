@@ -41,6 +41,11 @@ class API
             $url = self::site_url('/no');
         }
 
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+        $strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
+
+        session_write_close();
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, self::$email . ":" . self::$apikey);
@@ -50,6 +55,9 @@ class API
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
+        curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
+
         self::$response = curl_exec($ch);
         curl_close($ch);
 

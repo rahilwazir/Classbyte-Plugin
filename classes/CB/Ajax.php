@@ -84,25 +84,25 @@ class Ajax
                     case 'cb_reg_form':
                         $api_post = API::post(API::$apiurls['sign']['up'], $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
-                        var_dump($response);
+
                         if (isset($response['success'], $response['action']) && $response['message'] !== '') {
                             if ($response['success'] == true) {
                                 $data = return_include_once('single-class-schedule-step2-login.php', $response);
                                 wp_send_json_success($data);
                             } else {
-                                wp_send_json_error($response['data']);
+                                wp_send_json_error($response);
                             }
                         }
                         break;
                     case 'cb_login_form':
                         $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
-                        var_dump($response);
-                        if (isset($response['success'], $response['action']) && $response['message'] !== '') {
+
+                        if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
                                 wp_send_json_success($response);
                             } else {
-                                wp_send_json_error($response['message']);
+                                wp_send_json_error($response);
                             }
                         }
                         break;
