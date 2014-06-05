@@ -10,7 +10,7 @@
     <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_login_form">
         <div class="reg-header">
             <h2>Student Login</h2>
-            <p>To create an account, <a href="#" data-switch-form="cb_registration_form">click here</a>.</p>
+            <p>To create an account, <a href="#register" data-switch-form="cb_registration_form">click here</a>.</p>
         </div>
 
         <div class="form-group">

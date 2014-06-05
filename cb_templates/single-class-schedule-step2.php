@@ -7,7 +7,7 @@
     <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_reg_form">
         <div class="reg-header">
             <h2>Register a new account</h2>
-            <p>Already Signed Up? Click <a data-switch-form="cb_login_form" href="#">Sign In</a> to login your account.</p>
+            <p>Already Signed Up? Click <a data-switch-form="cb_login_form" href="#login">Sign In</a> to login your account.</p>
         </div>
 
         <div class="form-group">

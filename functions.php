@@ -1,4 +1,6 @@
 <?php
+namespace CB;
+
 if (!defined("ABSPATH")) exit;
 
 /**
@@ -108,4 +110,15 @@ function return_include_once($template, $data = array())
 
     include CB_TEMPLATES . $template;
     return ob_get_clean();
+}
+
+function is_student_logged_in()
+{
+    $response = API::post(API::$apiurls['auth']['userin'])->jsonDecode()->getResponse();
+    var_dump($response);
+    if (isset($response['success']) && $response['success'] == true && $response['action'] == 3) {
+        return true;
+    }
+
+    return false;
 }

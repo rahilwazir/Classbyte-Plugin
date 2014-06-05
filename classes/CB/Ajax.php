@@ -84,11 +84,12 @@ class Ajax
                     case 'cb_reg_form':
                         $api_post = API::post(API::$apiurls['sign']['up'], $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
-                        if (isset($response['success'], $response['data'])) {
-                            if ($response['success'] == true && $response['data'] !== '') {
+                        var_dump($response);
+                        if (isset($response['success'], $response['action']) && $response['message'] !== '') {
+                            if ($response['success'] == true) {
                                 $data = return_include_once('single-class-schedule-step2-login.php', $response);
                                 wp_send_json_success($data);
-                            } else if ($response['success'] == false && $response['data'] !== '') {
+                            } else {
                                 wp_send_json_error($response['data']);
                             }
                         }
@@ -96,11 +97,12 @@ class Ajax
                     case 'cb_login_form':
                         $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
-                        if (isset($response['success'], $response['data'])) {
-                            if ($response['success'] == true && $response['data'] !== '') {
-                                wp_send_json_success($response['data']);
-                            } else if ($response['success'] == false && $response['data'] !== '') {
-                                wp_send_json_error($response['data']);
+                        var_dump($response);
+                        if (isset($response['success'], $response['action']) && $response['message'] !== '') {
+                            if ($response['success'] == true) {
+                                wp_send_json_success($response);
+                            } else {
+                                wp_send_json_error($response['message']);
                             }
                         }
                         break;

@@ -6,6 +6,7 @@
  * License: Not for public use
  */
 var CB = (function($) {
+    var r = {};
 
     /**
      * Private
@@ -23,7 +24,7 @@ var CB = (function($) {
 
         $.ajax({
             type: 'POST',
-            url: cbConfig.admin_url,
+            url: cbConfig.ajax_url,
             data: {
                 action: 'cb_form',
                 form_name: $(this).prop('name'),
@@ -33,40 +34,52 @@ var CB = (function($) {
                 cb_form_area.append('<div id="cb-form-loading"></div>');
                 cb_form_area.find('.alert').remove();
             },
-            success: function(data) {
+            success: function(result) {
                 try {
-                    if (data.success == true) {
-                        if (data.data !== "") {
+                    if (result.success == true) {
+                        switch (result.data.action) {
+                            case 1:
+                                location.replace('?action=payment');
+                                break;
+                            case 2:
+                                // registration
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if (result.data !== "") {
                             if (last_step_progress <= step_progress_length) {
                                 step_progress.find('li').eq(last_step_progress + 1).addClass('active');
                             } else {
                                 last_step_progress = step_progress_length;
                             }
-                            cb_form_area.empty().append(data.data);
+
+                            cb_form_area.empty().append(result.data);
                         }
-                    } else if (data.success == false) {
-                        if (data.data !== "") {
+                    } else if (result.success == false) {
+                        if (result.data !== "") {
+                            var error_data = result.data;
                             var display_errors = '<div class="alert alert-danger">';
-                            if (typeof data.data === "string") {
-                                display_errors += '<p>' + data.data + '</p>'
+                            if (typeof error_data === "string") {
+                                display_errors += '<p>' + error_data + '</p>'
                             } else {
-                                var labels = Object.keys(data.data);
+                                var labels = Object.keys(error_data);
 
                                 $("#" + labels.join(', #')).each(function () {
-                                    if (data.data[$(this).prop('id')]) {
+                                    if (error_data[$(this).prop('id')]) {
                                         display_errors += '<p><strong>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
-                                        display_errors += ' ' + data.data[$(this).prop('id')];
+                                        display_errors += ' ' + error_data[$(this).prop('id')];
                                         display_errors += '</strong></p>';
                                     }
                                 });
-
                             }
                             display_errors += '</div>';
                             cb_form_area.prepend(display_errors);
                         }
                     }
                 } catch(e) {
-                    console.log(data);
+                    console.log(result);
                 }
             },
             complete: function () {
@@ -82,7 +95,7 @@ var CB = (function($) {
         e.preventDefault();
 
         $.ajax({
-            url: cbConfig.admin_url,
+            url: cbConfig.ajax_url,
             type: 'POST',
             data: {
                 action: 'cb_switch_forms',
@@ -106,5 +119,7 @@ var CB = (function($) {
                 $('#cb-form-loading').remove();
             }
         });
-    })
+    });
+
+    return r;
 }(jQuery));

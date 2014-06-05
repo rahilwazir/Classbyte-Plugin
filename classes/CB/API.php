@@ -12,7 +12,9 @@ class API
 
     public static $apiurls = array(
         'auth' => array(
-            'verify' => '/auth/verify'
+            'verify' => '/auth/verify',
+            'userin' => '/auth/userin',
+            'userout' => '/auth/userout'
         ),
         'courses' => array(
             'listing' => '/courses/listing'
@@ -28,21 +30,11 @@ class API
         return self::$response;
     }
 
-    public static function __callStatic($method, $args)
+    public static function post($url, $data = array())
     {
-        $email = get_option('cb_cb_username');
-        $apikey = get_option('cb_cb_api');
+        self::$email = get_option('cb_cb_username');
+        self::$apikey = get_option('cb_cb_api');
 
-        if ($email && $apikey) {
-            self::$email = $email;
-            self::$apikey = $apikey;
-        }
-
-        return call_user_func_array(get_called_class() . '::' . $method, $args);
-    }
-
-    protected static function post($url, $data = array())
-    {
         $url = self::site_url($url);
 
         if (!self::$email || !self::$apikey) {

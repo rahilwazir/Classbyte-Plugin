@@ -72,7 +72,7 @@ class ClassByte
 
         wp_localize_script('cb', 'cbConfig', array(
             'site_url' => site_url(),
-            'admin_url' => admin_url('admin-ajax.php')
+            'ajax_url' => admin_url('admin-ajax.php'),
         ));
     }
 }
