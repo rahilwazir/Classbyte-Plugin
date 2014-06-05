@@ -115,7 +115,6 @@ function return_include_once($template, $data = array())
 function is_student_logged_in()
 {
     $response = API::post(API::$apiurls['auth']['userin'])->jsonDecode()->getResponse();
-    var_dump($response);
     if (isset($response['success']) && $response['success'] == true && $response['action'] == 3) {
         return true;
     }

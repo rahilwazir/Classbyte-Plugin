@@ -76,7 +76,6 @@ class API
     public static function site_url($param = "")
     {
         return 'http://dev.classbyte.net/api' . $param;
-        #return site_url('/api' . $param);
     }
 
     public function insertCourseClasses()
@@ -86,8 +85,6 @@ class API
         foreach (self::$response as $course) {
             foreach ($course['classes'] as $class) {
                 $title = $class['coursetypename'] . ' ' . date("F-d-Y", strtotime($class['coursedate'])) . ' ' . $class['location'] . ' Class ' . $class['scheduledcoursesid'];
-
-                #if (Posttypes::postExists($title)) continue;
 
                 $my_post = array(
                     'post_title' => $title,
