@@ -42,7 +42,6 @@ class API
         }
 
         $useragent = $_SERVER['HTTP_USER_AGENT'];
-        $strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
 
         session_write_close();
 
@@ -55,8 +54,9 @@ class API
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch,CURLOPT_USERAGENT, $useragent);
-        curl_setopt( $ch, CURLOPT_COOKIE, $strCookie );
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "cb-api-cookie.txt");
+        curl_setopt($ch, CURLOPT_COOKIEJAR, "cb-api-cookie.txt");
 
         self::$response = curl_exec($ch);
         curl_close($ch);

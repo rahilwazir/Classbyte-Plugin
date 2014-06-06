@@ -78,7 +78,7 @@ class Ajax
             } else {
                 switch ($_POST['form_name']) {
                     case 'cb_enroll_form':
-                        $data = return_include_once('single-class-schedule-step2.php', $form_data);
+                        $data = return_include_once('single-class-schedule-register.php', $form_data);
                         wp_send_json_success($data);
                         break;
                     case 'cb_reg_form':
@@ -87,7 +87,7 @@ class Ajax
 
                         if (isset($response['success'], $response['action']) && $response['message'] !== '') {
                             if ($response['success'] == true) {
-                                $data = return_include_once('single-class-schedule-step2-login.php', $response);
+                                $data = return_include_once('class-schedule-login.php', $response);
                                 wp_send_json_success($data);
                             } else {
                                 wp_send_json_error($response);
@@ -122,10 +122,10 @@ class Ajax
 
             switch ($_POST['form_of']) {
                 case "cb_login_form":
-                    $content = return_include_once('single-class-schedule-step2-login.php');
+                    $content = return_include_once('class-schedule-login.php');
                     break;
                 case "cb_registration_form":
-                    $content = return_include_once('single-class-schedule-step2.php');
+                    $content = return_include_once('single-class-schedule-register.php');
                     break;
                 default:
                     break;

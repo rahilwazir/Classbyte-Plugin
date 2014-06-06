@@ -115,7 +115,19 @@ function return_include_once($template, $data = array())
 function is_student_logged_in()
 {
     $response = API::post(API::$apiurls['auth']['userin'])->jsonDecode()->getResponse();
-    if (isset($response['success']) && $response['success'] == true && $response['action'] == 3) {
+
+    if (isset($response['success'], $response['action']) && $response['success'] == true && $response['action'] == 3) {
+        return true;
+    }
+
+    return false;
+}
+
+function cb_sign_out()
+{
+    $response = API::post(API::$apiurls['auth']['userout'])->jsonDecode()->getResponse();
+
+    if (isset($response['success'], $response['action']) && $response['success'] == true && $response['action'] == 3) {
         return true;
     }
 

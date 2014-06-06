@@ -39,7 +39,7 @@ var CB = (function($) {
                     if (result.success == true) {
                         switch (result.data.action) {
                             case 1:
-                                location.replace('?action=payment');
+                                location.replace(location.href.replace(/\/[\w\-]+(\/[\/]*)?$/, '') + "/payment");
                                 break;
                             case 2:
                                 // registration
@@ -94,31 +94,18 @@ var CB = (function($) {
     $(document).on('click', 'a[data-switch-form]', function(e) {
         e.preventDefault();
 
-        $.ajax({
-            url: cbConfig.ajax_url,
-            type: 'POST',
-            data: {
-                action: 'cb_switch_forms',
-                form_of: $(this).data('switch-form') || ''
-            },
-            beforeSend: function() {
-                cb_form_area.append('<div id="cb-form-loading"></div>');
-            },
-            success: function(data) {
-                try {
-                    if (data.success == true) {
-                        if (data.data !== "") {
-                            cb_form_area.empty().append(data.data);
-                        }
-                    }
-                } catch(e) {
-                    console.log(data);
-                }
-            },
-            complete: function () {
-                $('#cb-form-loading').remove();
-            }
-        });
+        var login_form = $('form[name=cb_login_form]'),
+            reg_form = $('form[name=cb_reg_form]');
+
+        $('.alert').remove();
+
+        if (login_form.hasClass('hidden')) {
+            login_form.removeClass('hidden');
+            reg_form.addClass('hidden');
+        } else {
+            reg_form.removeClass('hidden');
+            login_form.addClass('hidden');
+        }
     });
 
     return r;

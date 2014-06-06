@@ -1,8 +1,4 @@
-<?php
-/**
- * Single Post Template step 2 file for Class Schedule post type
- */
-?>
+<?php include_once('single-class/header.php'); ?>
 <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_reg_form">
         <div class="reg-header">
@@ -127,9 +123,14 @@
             </div>
             <div class="col-lg-6 text-left">
                 <input type="hidden" name="_cb_nonce" value="<?php echo wp_create_nonce('cb_forms-only-ajax'); ?>">
-                <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
+                <?php if (isset($_POST['course_id']) && wp_verify_nonce($_POST['course_token'], $_POST['course_id'])) {
+                    $course_id = $_POST['course_id'];
+                    echo '<input type="hidden" name="course_id" value="' . $course_id .'">';
+                } ?>
                 <input type="submit" class="btn" value="Register">
             </div>
         </div>
     </form>
+    <?php include_once('class-schedule-login.php'); ?>
 </div>
+<?php include_once('single-class/footer.php'); ?>

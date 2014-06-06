@@ -20,8 +20,9 @@ define('CB_TEMPLATES', trailingslashit(CB_DIR . 'cb_templates'));
 define('CB_URL', trailingslashit(plugins_url('', __FILE__)));
 define('ASSETS_URL', trailingslashit(CB_URL . 'assets'));
 
-include_once CB_DIR . 'functions.php';
 include_once CB_DIR . 'autoload.php';
+include_once CB_DIR . 'functions.php';
+include_once CB_DIR . 'hooks.php';
 
 $cb = new ClassByte();
 
