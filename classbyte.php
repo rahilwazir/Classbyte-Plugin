@@ -13,6 +13,8 @@ namespace CB;
 
 // Directory
 define('CB_DIR', plugin_dir_path(__FILE__));
+define('CB_COOKIE_FILE', 'cb-api-cookie.txt');
+define('CB_COOKIE_FILE_PATH', CB_DIR . 'classes/CB/' . CB_COOKIE_FILE);
 define('CB_VIEWS', trailingslashit(CB_DIR . 'views'));
 define('CB_TEMPLATES', trailingslashit(CB_DIR . 'cb_templates'));
 

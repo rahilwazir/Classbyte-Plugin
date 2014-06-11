@@ -55,6 +55,12 @@ class API
 
         session_write_close();
 
+        if (!file_exists(CB_COOKIE_FILE_PATH)) {
+            $fh = fopen(CB_COOKIE_FILE_PATH, "w");
+            fwrite($fh, "");
+            fclose($fh);
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, self::$email . ":" . self::$apikey);
@@ -64,8 +70,9 @@ class API
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, "cb-api-cookie.txt");
-        curl_setopt($ch, CURLOPT_COOKIEJAR, "cb-api-cookie.txt");
+        curl_setopt($ch, CURLOPT_COOKIEFILE, CB_COOKIE_FILE);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, CB_COOKIE_FILE);
+
         self::$response = curl_exec($ch);
 
         curl_close($ch);

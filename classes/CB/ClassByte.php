@@ -35,6 +35,8 @@ class ClassByte
         register_endpoints();
 
         flush_rewrite_rules();
+        
+        chmod(CB_COOKIE_FILE, 0777);
     }
 
     public static function deactivation()
