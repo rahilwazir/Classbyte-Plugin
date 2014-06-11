@@ -14,10 +14,14 @@ class PostsPages
             'title' => "Student Login",
             'content' => "[cb_class_schedule_login]"
         ),
+        2 => array(
+            'title' => "Course History",
+            'content' => "[cb_course_history]"
+        ),
     );
 
     /**
-     * Add all the classes from API
+     * Add all the (posts) classes from API
      */
     public static function add($page_details = array())
     {

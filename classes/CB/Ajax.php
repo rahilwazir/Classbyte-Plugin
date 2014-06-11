@@ -152,7 +152,7 @@ class Ajax
 
                         if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
-                                $response['redirect'] = get_permalink(304);
+                                $response['redirect'] = get_permalink_by_slug('class-schedule');
                                 wp_send_json_success($response);
                             } else {
                                 wp_send_json_error($response);
@@ -165,7 +165,7 @@ class Ajax
 
                         if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
-                                $response['redirect'] = get_permalink(304);
+                                $response['redirect'] = get_permalink_by_slug('course-history');
                                 wp_send_json_success($response);
                             } else {
                                 wp_send_json_error($response);
@@ -200,7 +200,7 @@ class Ajax
 
         if ($response) {
             if ($response['success'] == "true") {
-                wp_send_json_success(get_permalink(304));
+                wp_send_json_success(get_permalink_by_slug('class-schedule'));
             }
         }
 

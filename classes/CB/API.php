@@ -19,7 +19,8 @@ class API
             'userout' => '/auth/userout'
         ),
         'courses' => array(
-            'listing' => '/courses/listing'
+            'listing' => '/courses/listing',
+            'paid/:id' => '/courses/paid'
         ),
         'sign' => array(
             'up' => '/sign/up',
@@ -65,8 +66,8 @@ class API
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_COOKIEFILE, "cb-api-cookie.txt");
         curl_setopt($ch, CURLOPT_COOKIEJAR, "cb-api-cookie.txt");
-
         self::$response = curl_exec($ch);
+
         curl_close($ch);
 
         return new self;

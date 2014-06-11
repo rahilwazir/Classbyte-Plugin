@@ -76,6 +76,15 @@ var CB = (function($) {
                             case 2:
                                 // registration
                                 break;
+                            case 5:
+                                $('#cb_forms-only-ajax').parent().slideUp('fast', function () {
+                                    cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+
+                                    setTimeout(function () {
+                                        location.replace(result.data.redirect);
+                                    }, 6000);
+                                });
+                                break;
                             default:
                                 break;
                         }

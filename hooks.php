@@ -6,10 +6,11 @@ if (!defined("ABSPATH")) exit;
 /**
  * Add rewrite endpoint for several actions
  */
-add_action('init', function () {
+function register_endpoints() {
     add_rewrite_endpoint('payment', EP_PERMALINK);
     add_rewrite_endpoint('register', EP_PERMALINK);
-});
+}
+add_action('init', '\CB\register_endpoints');
 
 /**
  * Register rewrite endpoint

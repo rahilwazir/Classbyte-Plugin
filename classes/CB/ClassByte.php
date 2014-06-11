@@ -23,8 +23,6 @@ class ClassByte
     {
         Posttypes::registerPostType();
 
-        flush_rewrite_rules();
-
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
 
@@ -33,18 +31,21 @@ class ClassByte
         } else {
             PostsPages::unTrashAll();
         }
+
+        register_endpoints();
+
+        flush_rewrite_rules();
     }
 
     public static function deactivation()
     {
-        Posttypes::registerPostType();
-
-        flush_rewrite_rules();
 
         if ( ! current_user_can( 'activate_plugins' ) )
             return;
 
         PostsPages::trashAll();
+
+        flush_rewrite_rules();
     }
 
     public static function uninstall()

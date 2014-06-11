@@ -3,8 +3,26 @@ namespace CB;
 
 include_once('single-class/header.php');
 
+API::$apiurls['courses']['paid/:id'] = '/courses/paid/' . $fcd['scheduledcoursesid'];
+
+$paid = API::post(API::$apiurls['courses']['paid/:id'])->jsonDecode()->getResponse();
+
+if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
+?>
+<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+    <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_payment_form">
+        <p class="text-center">
+            <img src="<?php echo ASSETS_URL . 'img/thumbs_up.png'; ?>" alt=""><br><br>
+            <?php echo $paid['message']; ?>
+        </p>
+    </form>
+</div>
+<?php
+} else {
+
 $user_data = API::post(API::$apiurls['users']['info'])->jsonDecode()->getResponse();
 $user_data = $user_data['object'];
+
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
@@ -89,10 +107,6 @@ $user_data = $user_data['object'];
                 <label for="country">Country <span class="color-red">*</span></label>
                 <input type="text" readonly="readonly" class="span4 form-control" value="US" name="country" id="country">
             </div>
-            <div style="display:none;">
-                <label for="amount">Amount <span class="color-red">*</span></label>
-                <input type="text" class="span4 form-control" value="12" name="amount" id="amount"></div>
-
             <br><br>
             <button type="submit" class="btn-u btn-u-orange">Pay Now</button>
             <input type="hidden" name="_cb_nonce" value="<?php echo wp_create_nonce('cb_forms-only-ajax'); ?>">
@@ -134,4 +148,4 @@ $user_data = $user_data['object'];
         </div>
     </form>
 </div>
-<?php include_once('single-class/footer.php'); ?>
+<?php } include_once('single-class/footer.php'); ?>

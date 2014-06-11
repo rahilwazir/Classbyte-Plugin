@@ -145,10 +145,18 @@ function cb_sign_out()
 
 function sign_out_link()
 {
-    echo '<a href="javascript;" class="mini-request" id="cb_sign_out">Sign out</a>';
+    echo '<div class="col-md-12 text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
 }
 
 function get_df_data(&$key, $default = '')
 {
     return sanitize_text_field((isset($key)) ? $key : $default);
+}
+
+/**
+* Retrieve permalink by slug
+*/
+function get_permalink_by_slug($slug)
+{
+    return get_permalink(get_page_by_path($slug));
 }
