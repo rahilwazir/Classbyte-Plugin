@@ -6,11 +6,13 @@
 <?php if (isset($message) && is_string($message)) { ?>
     <div class="alert alert-success"><?php echo $message; ?></div>
 <?php } ?>
-<form class="reg-page hidden" id="cb_forms-only-ajax" method="post" name="cb_login_form">
+<form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_login_form">
+    <?php if ($reg_header == "yes") { ?>
     <div class="reg-header">
         <h2>Student Login</h2>
         <p>To create an account, <a href="#register" data-switch-form="cb_registration_form">click here</a>.</p>
     </div>
+    <?php } ?>
 
     <div class="form-group">
         <label for="cb_login_email">Email</label>

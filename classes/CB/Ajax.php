@@ -10,8 +10,8 @@ class Ajax
         add_action('wp_ajax_cb_form', array($this, 'cb_handle_form'));
         add_action('wp_ajax_nopriv_cb_form', array($this, 'cb_handle_form'));
 
-        add_action('wp_ajax_cb_switch_forms', array($this, 'cb_switching_form'));
-        add_action('wp_ajax_nopriv_cb_switch_forms', array($this, 'cb_switching_form'));
+        add_action('wp_ajax_mini_requests', array($this, 'miniRequests'));
+        add_action('wp_ajax_nopriv_mini_requests', array($this, 'miniRequests'));
     }
 
     public function cb_handle_form()
@@ -71,6 +71,58 @@ class Ajax
                 $cb_errors['cb_login_password'] = ($form_data['cb_login_password'] === '') ? __('required.') : '';
             }
 
+            /**
+             * Payment form validation
+             */
+            if ($_POST['form_name'] === "cb_payment_form") {
+                $datetime = new \DateTime();
+
+                $cb_errors['firstName'] = ($form_data['firstName'] === '') ? __('required.')
+                    : (!validate_name($form_data['firstName']) ? __('should be alphabetic.') : '');
+
+                $cb_errors['lastName'] = ($form_data['lastName'] === '') ? __('required.')
+                    : (!validate_name($form_data['lastName']) ? __('should be alphabetic.') : '');
+
+                $cb_errors['creditCardType'] = ($form_data['creditCardType'] === '') ? __('required.')
+                    : (!in_array($form_data['creditCardType'], array(
+                        'Visa', 'MasterCard', 'Discover', 'Amex'
+                    )) ? __('is not valid.') : '');
+
+                $cb_errors['creditCardNumber'] = ($form_data['creditCardNumber'] === '') ? __('required.') : '';
+
+                $month_range = array();
+                foreach (range(1, 12) as $r) {
+                    $month_range[] = sprintf("%02d", $r);
+                }
+
+                $cb_errors['expDateMonth'] = ($form_data['expDateMonth'] === '') ? __(' (Month) required.')
+                    : (!in_array($form_data['expDateMonth'], $month_range, true) ? __('(Month) is invalid.') : '');
+
+                $cb_errors['expDateYear'] = ($form_data['expDateYear'] === '') ? __('(Year) required.')
+                    : (!in_array($form_data['expDateYear'], range((int) $datetime->format('Y'), (int) $datetime->format('Y') + 10)) ? __('(Year) is invalid.') : '');
+
+                $cb_errors['cvv2Number'] = ($form_data['cvv2Number'] === '') ? __('required.') : '';
+
+                $cb_errors['address1'] = ($form_data['address1'] === '') ? __('required.') : '';
+
+                $cb_errors['city'] = ($form_data['city'] === '') ? __('required.') : '';
+
+                $cb_errors['state'] = ($form_data['state'] === '') ? __('required.') : '';
+
+                $cb_errors['zip'] = ($form_data['zip'] === '') ? __('required.')
+                    : (!is_numeric($form_data['zip']) ? __('should contain numbers only.') : '');
+
+                $cb_errors['country'] = ($form_data['country'] === '') ? __('required.') : '';
+
+                $cb_errors['coursecost'] = ($form_data['coursecost'] === '') ? __('required.') : '';
+
+                $cb_errors['scheduledcoursesid'] = ($form_data['scheduledcoursesid'] === '') ? __('required.') : '';
+
+                $cb_errors['stripeToken'] = ($form_data['stripeToken'] === '') ? __('required.') : '';
+
+                $datetime = null;
+            }
+
             $cb_errors_clean = array_filter($cb_errors);
 
             if (!empty($cb_errors_clean)) {
@@ -100,6 +152,20 @@ class Ajax
 
                         if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
+                                $response['redirect'] = get_permalink(304);
+                                wp_send_json_success($response);
+                            } else {
+                                wp_send_json_error($response);
+                            }
+                        }
+                        break;
+                    case 'cb_payment_form':
+                        $api_post = API::post(API::$apiurls['payment']['pay'], $form_data);
+                        $response = $api_post->jsonDecode()->getResponse();
+
+                        if (isset($response['success'], $response['action'])) {
+                            if ($response['success'] == true) {
+                                $response['redirect'] = get_permalink(304);
                                 wp_send_json_success($response);
                             } else {
                                 wp_send_json_error($response);
@@ -115,24 +181,29 @@ class Ajax
         exit;
     }
 
-    public function cb_switching_form()
+    public function miniRequests()
     {
-        if (isset($_POST['action']) && $_POST['action'] === 'cb_switch_forms') {
-            $content = '';
-
-            switch ($_POST['form_of']) {
-                case "cb_login_form":
-                    $content = return_include_once('class-schedule-login.php');
-                    break;
-                case "cb_registration_form":
-                    $content = return_include_once('single-class-schedule-register.php');
-                    break;
-                default:
-                    break;
-            }
-
-            wp_send_json_success($content);
+        if (!isset($_POST['action'], $_POST['event']) && $_POST['action'] !== 'mini_requests') {
+            exit('Error');
         }
+
+        $event = $_POST['event'];
+
+        switch ($event) {
+            case 'sign_out':
+                $response = API::post(API::$apiurls['sign']['out'])->jsonDecode()->getResponse();
+                break;
+            default:
+                $response = null;
+                break;
+        }
+
+        if ($response) {
+            if ($response['success'] == "true") {
+                wp_send_json_success(get_permalink(304));
+            }
+        }
+
         exit;
     }
 }

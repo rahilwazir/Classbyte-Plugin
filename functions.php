@@ -14,16 +14,12 @@ function store_post_page_ids($id)
         return;
     }
 
-    $arr = array();
     $cb_post_page_ids = get_option('cb_post_page_ids');
 
-    if (!$cb_post_page_ids) {
-        array_push($arr, $id);
-        add_option('cb_post_page_ids', $arr);
-    } else {
-        array_push($cb_post_page_ids, $id);
-        update_option('cb_post_page_ids', $cb_post_page_ids);
-    }
+    if (empty($cb_post_page_ids)) $cb_post_page_ids = array();
+
+    $cb_post_page_ids[] = $id;
+    update_option('cb_post_page_ids', $cb_post_page_ids);
 }
 
 /**
@@ -112,24 +108,47 @@ function return_include_once($template, $data = array())
     return ob_get_clean();
 }
 
+/**
+ * Check wether user is logged into API
+ * @return bool
+ */
 function is_student_logged_in()
 {
     $response = API::post(API::$apiurls['auth']['userin'])->jsonDecode()->getResponse();
 
-    if (isset($response['success'], $response['action']) && $response['success'] == true && $response['action'] == 3) {
+    if (isset($response['success'], $response['action'])
+        && $response['success'] == true
+        && $response['action'] == 3
+    ) {
         return true;
     }
 
     return false;
 }
 
+/**
+ * Signs out student from API
+ * @return bool
+ */
 function cb_sign_out()
 {
-    $response = API::post(API::$apiurls['auth']['userout'])->jsonDecode()->getResponse();
-
-    if (isset($response['success'], $response['action']) && $response['success'] == true && $response['action'] == 3) {
+    $response = API::post(API::$apiurls['sign']['out'])->jsonDecode()->getResponse();
+    if (isset($response['success'], $response['action'])
+        && $response['success'] == true
+        && $response['action'] == 1
+    ) {
         return true;
     }
 
     return false;
+}
+
+function sign_out_link()
+{
+    echo '<a href="javascript;" class="mini-request" id="cb_sign_out">Sign out</a>';
+}
+
+function get_df_data(&$key, $default = '')
+{
+    return sanitize_text_field((isset($key)) ? $key : $default);
 }

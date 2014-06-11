@@ -32,7 +32,7 @@ add_filter( 'template_include', function ($single_template) {
 
     } else if (isset($wp_query->query_vars['register'])) {
         if (is_student_logged_in()) {
-            wp_redirect(get_permalink($post->ID));
+            wp_redirect(get_permalink($post->ID) . 'payment');
             exit;
         }
 
@@ -45,3 +45,15 @@ add_filter( 'template_include', function ($single_template) {
 
     return $single_template;
 }, 9999);
+
+add_action( 'delete_post', function ($post_id) {
+    $cb_post_page_ids = get_option('cb_post_page_ids');
+
+    if (empty($cb_post_page_ids)) return $post_id;
+
+    $key = array_search($post_id, $cb_post_page_ids);
+
+    if ($key !== false) unset($cb_post_page_ids[$key]);
+
+    update_option('cb_post_page_ids', $cb_post_page_ids);
+});

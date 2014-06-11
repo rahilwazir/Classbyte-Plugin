@@ -1,4 +1,5 @@
 <?php
+namespace CB;
 /**
  * Single Post Template file for Class Schedule post type
  */
@@ -25,3 +26,4 @@ if (isset($wp_query->query_vars['register'])) {
 </div>
 
 <div id="cb-form-area" class="clearfix">
+    <?php if (is_student_logged_in()) echo sign_out_link(); ?>

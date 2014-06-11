@@ -8,14 +8,11 @@ class Shortcodes
     public function __construct()
     {
         add_shortcode('cb_class_listing', array($this, 'classListing'));
+        add_shortcode('cb_class_schedule_login', array($this, 'scheduleLogin'));
     }
 
     public function classListing($atts, $content = null)
     {
-        extract(shortcode_atts(array(
-
-        ), $atts));
-
         PostsPages::deleteAll(true);
 
         API::post(API::$apiurls['courses']['listing'])->jsonDecode()->insertCourseClasses();
@@ -73,5 +70,19 @@ class Shortcodes
             </div>
         </div>
     <?php
+    }
+
+    public function scheduleLogin($atts, $content = null)
+    {
+        extract(shortcode_atts(array(
+            'parent' => "yes",
+            'reg_header' => "no"
+        ), $atts));
+
+        if ($parent == "yes") echo '<div id="cb-form-area" class="clearfix">';
+
+        include CB_TEMPLATES . 'class-schedule-login.php';
+
+        if ($parent == "yes") echo '</div>';
     }
 }

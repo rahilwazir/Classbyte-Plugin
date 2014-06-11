@@ -5,41 +5,69 @@ if (!defined("ABSPATH")) exit;
 
 class PostsPages
 {
+    public static $post_pages = array(
+        0 => array(
+            'title' => "Class Schedule",
+            'content' => "[cb_class_listing]"
+        ),
+        1 => array(
+            'title' => "Student Login",
+            'content' => "[cb_class_schedule_login]"
+        ),
+    );
+
     /**
      * Add all the classes from API
      */
-    public static function add()
+    public static function add($page_details = array())
     {
-        $title = "Class Schedule";
+        if (empty($page_details)) $page_details = self::$post_pages;
 
-        $my_post = array(
-            'post_title'    => $title,
-            'post_content'  => '[cb_class_listing]',
-            'post_status'   => 'publish',
-            'post_author'   => 1,
-            'post_type'     => 'page',
-            'comment_status' => 'closed'
-        );
+        foreach ($page_details as $page) {
+            $my_post = array(
+                'post_title'    => $page['title'],
+                'post_content'  => $page['content'],
+                'post_status'   => 'publish',
+                'post_author'   => 1,
+                'post_type'     => 'page',
+                'comment_status' => 'closed'
+            );
 
-        // Insert the post into the database
-        $post_id = wp_insert_post( $my_post );
+            $post_id = wp_insert_post( $my_post );
 
-        store_post_page_ids($post_id);
+            if ($post_id)
+                store_post_page_ids($post_id);
+        }
     }
 
     /**
      * Check if page exists or not
-     * @return bool
+     * @return mixed
      */
     public static function exists()
     {
         $cb_post_page_ids = get_option('cb_post_page_ids');
 
         if (!$cb_post_page_ids) {
-            return false;
+            return;
         }
 
-        return true;
+        $re_add = null;
+
+        foreach ($cb_post_page_ids as $post_page_id) {
+            $found = recursive_array_search($post_page_id, self::$post_pages);
+
+            if ($found !== false) {
+                $re_add[] = $found;
+            }
+        }
+
+        if (!is_null($re_add)) {
+            return $re_add;
+        } else {
+            return true;
+        }
+
     }
 
     /**
@@ -100,7 +128,7 @@ class PostsPages
     {
         $cb_post_page_ids = get_option('cb_post_page_ids');
 
-        if (!$cb_post_page_ids)
+        if ($cb_post_page_ids && empty($cb_post_page_ids))
             return;
 
         foreach ($cb_post_page_ids as $id) {

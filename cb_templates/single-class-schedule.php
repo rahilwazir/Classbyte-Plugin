@@ -1,4 +1,4 @@
-<?php include_once('single-class/header.php'); \CB\is_student_logged_in();?>
+<?php include_once('single-class/header.php'); ?>
 <div class="col-md-12">
     <div class="headline">
         <h3>

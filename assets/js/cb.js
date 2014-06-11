@@ -14,13 +14,43 @@ var CB = (function($) {
     var cb_form_area = $('#cb-form-area'),
         step_progress = $('#progressbar'),
         step_progress_length = step_progress.find('li').length - 1,
-        last_step_progress = step_progress.find('li.active').eq(-1).index();
+        last_step_progress = step_progress.find('li.active').eq(-1).index(),
+        submitAjax = true;
 
     /**
      * Classbyte form steps
      */
     $(document).on('submit', '#cb_forms-only-ajax', function (e) {
+        var $form = $(this);
+
         e.preventDefault();
+
+        if ($form.prop('name') == "cb_payment_form" && $form.find('input[name=stripeToken]').length < 1) {
+            submitAjax = false;
+
+            Stripe.setPublishableKey('pk_test_yDqOpZs98ool13VgFRAil8DB');
+
+            var stripeResponseHandler = function(status, response) {
+                if (response.error) {
+                    cb_form_area.find('.alert').remove();
+                    cb_form_area.prepend('<div class="alert alert-danger">' + response.error.message + '</div>');
+                    $form.find('button').prop('disabled', false);
+                } else {
+                    var token = response.id;
+                    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+                    submitAjax = true;
+                    $form.submit();
+                }
+            };
+
+            $form.find('button').prop('disabled', true);
+
+            Stripe.card.createToken($form, stripeResponseHandler);
+        }
+
+        if (submitAjax == false) {
+            return;
+        }
 
         $.ajax({
             type: 'POST',
@@ -33,13 +63,15 @@ var CB = (function($) {
             beforeSend: function () {
                 cb_form_area.append('<div id="cb-form-loading"></div>');
                 cb_form_area.find('.alert').remove();
+                cb_form_area.find('.has-error').removeClass('has-error');
+                $form.find('button').prop('disabled', true);
             },
             success: function(result) {
                 try {
                     if (result.success == true) {
                         switch (result.data.action) {
                             case 1:
-                                location.replace(location.href.replace(/\/[\w\-]+(\/[\/]*)?$/, '') + "/payment");
+                                location.replace(result.data.redirect);
                                 break;
                             case 2:
                                 // registration
@@ -68,9 +100,11 @@ var CB = (function($) {
 
                                 $("#" + labels.join(', #')).each(function () {
                                     if (error_data[$(this).prop('id')]) {
-                                        display_errors += '<p><strong>' + $('label[for="' + $(this).prop('id') + '"]').text().replace(' *', '');
+                                        display_errors += '<p>' + $('label[for="' + $(this).prop('id') + '"], label[data-for="' + $(this).prop('id') + '"]').text().replace(' *', '');
                                         display_errors += ' ' + error_data[$(this).prop('id')];
-                                        display_errors += '</strong></p>';
+                                        display_errors += '</p>';
+
+                                        $(this).closest('.form-group').addClass('has-error');
                                     }
                                 });
                             }
@@ -83,10 +117,11 @@ var CB = (function($) {
                 }
             },
             complete: function () {
+                $form.find('button').prop('disabled', false);
                 $('#cb-form-loading').remove();
             }
         });
-    })
+    });
 
     /**
      * Switch Login/Register form
@@ -99,13 +134,49 @@ var CB = (function($) {
 
         $('.alert').remove();
 
-        if (login_form.hasClass('hidden')) {
-            login_form.removeClass('hidden');
-            reg_form.addClass('hidden');
+        if (!login_form.is(':visible')) {
+            login_form.show();
+            reg_form.hide();
         } else {
-            reg_form.removeClass('hidden');
-            login_form.addClass('hidden');
+            login_form.hide();
+            reg_form.show();
         }
+    });
+
+    $(document).on('click', '.mini-request', function(e) {
+        e.preventDefault();
+
+        var self = $(this), event = null;
+
+        switch (self.prop('id')) {
+            case 'cb_sign_out':
+                event = 'sign_out';
+                break;
+            default:
+                break;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: cbConfig.ajax_url,
+            data: {
+                action: 'mini_requests',
+                event: event,
+                _: Date.now()
+            },
+            async: false,
+            beforeSend: function() {
+                self.after('<img src="' + cbConfig.assets_url + 'img/progress-dots.gif" alt="" class="progress-loader">');
+            },
+            success: function(data) {
+                if (data.success == true) {
+                    location.replace(data.data);
+                }
+            },
+            complete: function () {
+                self.next('.progress-loader').remove();
+            }
+        })
     });
 
     return r;

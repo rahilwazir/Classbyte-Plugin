@@ -131,6 +131,6 @@
             </div>
         </div>
     </form>
-    <?php include_once('class-schedule-login.php'); ?>
+    <?php do_shortcode('[cb_class_schedule_login parent="no" reg_header="yes"]'); // include_once('class-schedule-login.php'); ?>
 </div>
 <?php include_once('single-class/footer.php'); ?>
