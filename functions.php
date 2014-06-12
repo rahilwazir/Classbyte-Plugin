@@ -160,3 +160,18 @@ function get_permalink_by_slug($slug)
 {
     return get_permalink(get_page_by_path($slug));
 }
+
+function format_course_date($date, $time, $endtime)
+{
+    $datetime = new \DateTime();
+    $datetime->setTimestamp(strtotime($date));
+    $new_date = $datetime->format('l, M j, Y');
+
+    $datetime->setTimestamp(strtotime($time));
+    $new_time = $datetime->format('g:i a');
+
+    $datetime->setTimestamp(strtotime($endtime));
+    $new_end_time = $datetime->format('g:i a');
+
+    echo $new_date . ' ' . $new_time . ' - ' . $new_end_time;
+}

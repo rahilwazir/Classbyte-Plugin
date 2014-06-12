@@ -55,6 +55,7 @@ var CB = (function($) {
         $.ajax({
             type: 'POST',
             url: cbConfig.ajax_url,
+            async: false,
             data: {
                 action: 'cb_form',
                 form_name: $(this).prop('name'),
@@ -69,24 +70,23 @@ var CB = (function($) {
             success: function(result) {
                 try {
                     if (result.success == true) {
-                        switch (result.data.action) {
-                            case 1:
-                                location.replace(result.data.redirect);
-                                break;
-                            case 2:
-                                // registration
-                                break;
-                            case 5:
-                                $('#cb_forms-only-ajax').parent().slideUp('fast', function () {
-                                    cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+                        if (result.data.redirect) {
 
-                                    setTimeout(function () {
-                                        location.replace(result.data.redirect);
-                                    }, 6000);
-                                });
-                                break;
-                            default:
-                                break;
+                            if (result.data.object
+                                && result.data.object.hasOwnProperty('session_id')
+                                && result.data.object.session_id
+                            ) {
+                                $.removeCookie('__cbapi');
+                                $.cookie('__cbapi', result.data.object.session_id, { path: cbConfig.COOKIEPATH });
+                            }
+
+                            $('#cb_forms-only-ajax').slideUp('fast', function () {
+                                cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+
+                                setTimeout(function () {
+                                    location.replace(result.data.redirect);
+                                }, 6000);
+                            });
                         }
 
                         if (result.data !== "") {
@@ -122,7 +122,7 @@ var CB = (function($) {
                         }
                     }
                 } catch(e) {
-                    console.log(result);
+                    console.log(e, result);
                 }
             },
             complete: function () {
@@ -155,11 +155,12 @@ var CB = (function($) {
     $(document).on('click', '.mini-request', function(e) {
         e.preventDefault();
 
-        var self = $(this), event = null;
+        var self = $(this), event = null, removeCookie = false;
 
         switch (self.prop('id')) {
             case 'cb_sign_out':
                 event = 'sign_out';
+                removeCookie = true;
                 break;
             default:
                 break;
@@ -179,6 +180,11 @@ var CB = (function($) {
             },
             success: function(data) {
                 if (data.success == true) {
+
+                    if (removeCookie) {
+                        $.removeCookie('__cbapi');
+                    }
+
                     location.replace(data.data);
                 }
             },

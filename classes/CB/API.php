@@ -20,6 +20,7 @@ class API
         ),
         'courses' => array(
             'listing' => '/courses/listing',
+            'history' => '/courses/history',
             'paid/:id' => '/courses/paid'
         ),
         'sign' => array(
@@ -53,29 +54,25 @@ class API
 
         self::$url = $url;
 
-        session_write_close();
-
-        if (!file_exists(CB_COOKIE_FILE_PATH)) {
-            $fh = fopen(CB_COOKIE_FILE_PATH, "w");
-            fwrite($fh, "");
-            fclose($fh);
-        }
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, self::$email . ":" . self::$apikey);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, CB_COOKIE_FILE);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, CB_COOKIE_FILE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        self::$response = curl_exec($ch);
+        if (isset($_COOKIE['__cbapi'])) {
+            curl_setopt($ch, CURLOPT_COOKIE, '__cbapi=' . $_COOKIE['__cbapi']);
+        }
+
+        $response = curl_exec($ch);
 
         curl_close($ch);
+        self::$response = $response;
 
         return new self;
     }

@@ -67,6 +67,7 @@ class ClassByte
     public function scripts()
     {
         wp_enqueue_script('bootstrap-js', ASSETS_URL . 'js/bootstrap.min.js', array('jquery'), false, true);
+        wp_enqueue_script('jquery-cookie-js', ASSETS_URL . 'js/jquery.cookie.js', array('jquery'), false, true);
         wp_enqueue_script('cb', ASSETS_URL . 'js/cb.js', array('jquery'), false, true);
 
         wp_enqueue_style('bootstrap-css', ASSETS_URL . 'css/bootstrap.min.css');
@@ -76,7 +77,8 @@ class ClassByte
         wp_localize_script('cb', 'cbConfig', array(
             'site_url' => site_url(),
             'ajax_url' => admin_url('admin-ajax.php'),
-            'assets_url' => ASSETS_URL
+            'assets_url' => ASSETS_URL,
+            'COOKIEPATH' => COOKIEPATH
         ));
     }
 }

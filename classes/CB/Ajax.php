@@ -145,6 +145,11 @@ class Ajax
                                 wp_send_json_error($response);
                             }
                         }
+
+                        wp_send_json_error(array(
+                            'message' => 'Something went wrong.'
+                        ));
+
                         break;
                     case 'cb_login_form':
                         $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
@@ -158,6 +163,11 @@ class Ajax
                                 wp_send_json_error($response);
                             }
                         }
+
+                        wp_send_json_error(array(
+                            'message' => 'Something went wrong.'
+                        ));
+
                         break;
                     case 'cb_payment_form':
                         $api_post = API::post(API::$apiurls['payment']['pay'], $form_data);
@@ -171,11 +181,18 @@ class Ajax
                                 wp_send_json_error($response);
                             }
                         }
+
+                        wp_send_json_error(array(
+                            'message' => 'Something went wrong.'
+                        ));
+
                         break;
                     default:
+                        wp_send_json_error(array(
+                            'message' => 'There is no event for the current action.'
+                        ));
                         break;
                 }
-                wp_send_json_success();
             }
         }
         exit;

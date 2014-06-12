@@ -19,10 +19,8 @@ if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
 </div>
 <?php
 } else {
-
-$user_data = API::post(API::$apiurls['users']['info'])->jsonDecode()->getResponse();
-$user_data = $user_data['object'];
-
+    $user_data = API::post(API::$apiurls['users']['info'])->jsonDecode()->getResponse();
+    $user_data = $user_data['object'];
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">

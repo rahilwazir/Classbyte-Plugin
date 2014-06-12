@@ -1,10 +1,4 @@
-<?php
-namespace CB;
-
-PostsPages::deleteAll(true);
-
-API::post(API::$apiurls['courses']['listing'])->jsonDecode()->insertCourseClasses();
-?>
+<?php namespace CB; ?>
 <div class="reg-page full_width col-md-12">
     <div class="sub_accordian" style="float: left; width: 100% ! important;">
         <div class="panel-group" id="accordion">
