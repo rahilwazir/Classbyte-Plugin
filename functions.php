@@ -114,7 +114,7 @@ function return_include_once($template, $data = array())
  */
 function is_student_logged_in()
 {
-    $response = API::post(API::$apiurls['auth']['userin'])->jsonDecode()->getResponse();
+    $response = API::post('auth/userin')->jsonDecode()->getResponse();
 
     if (isset($response['success'], $response['action'])
         && $response['success'] == true
@@ -132,7 +132,7 @@ function is_student_logged_in()
  */
 function cb_sign_out()
 {
-    $response = API::post(API::$apiurls['sign']['out'])->jsonDecode()->getResponse();
+    $response = API::post('sign/out')->jsonDecode()->getResponse();
     if (isset($response['success'], $response['action'])
         && $response['success'] == true
         && $response['action'] == 1
@@ -145,7 +145,8 @@ function cb_sign_out()
 
 function sign_out_link()
 {
-    echo '<div class="col-md-12 text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
+    if (is_student_logged_in())
+        echo '<div class="col-md-12 text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
 }
 
 function get_df_data(&$key, $default = '')

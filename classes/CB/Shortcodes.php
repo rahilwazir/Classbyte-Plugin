@@ -14,8 +14,13 @@ class Shortcodes
 
     public function classListing($atts, $content = null)
     {
-        PostsPages::deleteAll(true);
-        API::post(API::$apiurls['courses']['listing'])->jsonDecode()->insertCourseClasses();
+        # PostsPages::deleteAll(true);
+
+        $r = API::post(array(
+            'course/listing',
+            'payment/stripe-public-key'
+        ))->jsonDecode()->getResponse();
+        var_dump($r);
 
         include CB_TEMPLATES . 'page-class-schedule.php';
     }
@@ -36,7 +41,7 @@ class Shortcodes
 
     public function courseHistory($atts, $content = null)
     {
-        $response = API::post(API::$apiurls['courses']['history'])->jsonDecode()->getResponse();
+        $response = API::post('course/history')->jsonDecode()->getResponse();
 
         $course_history = array();
 

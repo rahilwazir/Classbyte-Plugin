@@ -1,5 +1,5 @@
 <?php namespace CB; ?>
-<div class="reg-page full_width col-md-12">
+<div class="full_width col-md-12">
     <div class="sub_accordian" style="float: left; width: 100% ! important;">
         <div class="panel-group" id="accordion">
             <?php

@@ -71,21 +71,30 @@ var CB = (function($) {
                 try {
                     if (result.success == true) {
                         if (result.data.redirect) {
+                            var delay = 4000;
 
                             if (result.data.object
                                 && result.data.object.hasOwnProperty('session_id')
                                 && result.data.object.session_id
                             ) {
-                                $.removeCookie('__cbapi');
-                                $.cookie('__cbapi', result.data.object.session_id, { path: cbConfig.COOKIEPATH });
+                                $.removeCookie(cbConfig.CB_COOKIE_NAME, { path: cbConfig.COOKIEPATH });
+                                $.cookie(cbConfig.CB_COOKIE_NAME, result.data.object.session_id, { path: cbConfig.COOKIEPATH });
                             }
 
-                            $('#cb_forms-only-ajax').slideUp('fast', function () {
-                                cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+                            $('#cb_forms-only-ajax').slideUp('fast', function() {
+                                if (result.data.message) {
+                                    cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+                                }
+
+                                if (result.data.hasOwnProperty('noDelay')
+                                    && result.data.noDelay == true
+                                ) {
+                                    delay = 0;
+                                }
 
                                 setTimeout(function () {
                                     location.replace(result.data.redirect);
-                                }, 6000);
+                                }, delay);
                             });
                         }
 
@@ -181,8 +190,9 @@ var CB = (function($) {
             success: function(data) {
                 if (data.success == true) {
 
+                    // remove cookie session cookie
                     if (removeCookie) {
-                        $.removeCookie('__cbapi');
+                        $.removeCookie(cbConfig.CB_COOKIE_NAME, { path: cbConfig.COOKIEPATH });
                     }
 
                     location.replace(data.data);

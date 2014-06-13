@@ -78,7 +78,8 @@ class ClassByte
             'site_url' => site_url(),
             'ajax_url' => admin_url('admin-ajax.php'),
             'assets_url' => ASSETS_URL,
-            'COOKIEPATH' => COOKIEPATH
+            'COOKIEPATH' => COOKIEPATH,
+            'CB_COOKIE_NAME' => CB_COOKIE_NAME
         ));
     }
 }

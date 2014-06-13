@@ -8,37 +8,11 @@ class API
     private static $email = "";
     private static $apikey = "";
 
-    public static $url;
-
-    public static $response = array();
-
-    public static $apiurls = array(
-        'auth' => array(
-            'verify' => '/auth/verify',
-            'userin' => '/auth/userin',
-            'userout' => '/auth/userout'
-        ),
-        'courses' => array(
-            'listing' => '/courses/listing',
-            'history' => '/courses/history',
-            'paid/:id' => '/courses/paid'
-        ),
-        'sign' => array(
-            'up' => '/sign/up',
-            'in' => '/sign/in',
-            'out' => '/sign/out'
-        ),
-        'users' => array(
-            'info' => '/users/info'
-        ),
-        'payment' => array(
-            'pay' => '/payment/pay'
-        )
-    );
+    public static $responses = array();
 
     public function getResponse()
     {
-        return self::$response;
+        return self::$responses;
     }
 
     public static function post($url, $data = array())
@@ -46,15 +20,52 @@ class API
         self::$email = get_option('cb_cb_username');
         self::$apikey = get_option('cb_cb_api');
 
-        $url = self::site_url($url);
-
-        if (!self::$email || !self::$apikey) {
-            $url = self::site_url('/no');
+        if (is_array($url)) {
+            $uris = array();
+            foreach($url as $u) {
+                $uris[] = self::site_url($u);
+            }
+        } else {
+            $url = self::site_url($url);
         }
 
-        self::$url = $url;
+        if (!self::$email || !self::$apikey) {
+            $url = self::site_url('no');
+        }
 
-        $ch = curl_init();
+        $curl = new CURL();
+
+        $opts = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERPWD => self::$email . ":" . self::$apikey,
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_FRESH_CONNECT => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_RETURNTRANSFER => 1
+        );
+
+        if (isset($_COOKIE[CB_COOKIE_NAME])) {
+            $opts[CURLOPT_COOKIE] = CB_COOKIE_NAME . '=' . $_COOKIE[CB_COOKIE_NAME];
+        }
+
+        if (isset($uris) && count($uris) > 0) {
+            foreach ($uris as $uri) {
+                $curl->addSession($uri, $opts);
+            }
+        } else {
+            $curl->addSession( $url, $opts );
+        }
+
+        $response = $curl->exec();
+
+        if (is_array($response))
+            self::$responses = $response;
+
+        $curl->clear();
+
+        /*$ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, self::$email . ":" . self::$apikey);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -65,22 +76,29 @@ class API
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-        if (isset($_COOKIE['__cbapi'])) {
-            curl_setopt($ch, CURLOPT_COOKIE, '__cbapi=' . $_COOKIE['__cbapi']);
+        if (isset($_COOKIE[CB_COOKIE_NAME])) {
+            curl_setopt($ch, CURLOPT_COOKIE, CB_COOKIE_NAME . '=' . $_COOKIE[CB_COOKIE_NAME]);
         }
 
         $response = curl_exec($ch);
 
-        curl_close($ch);
-        self::$response = $response;
+        curl_close($ch);*/
+        self::$responses = $response;
 
         return new self;
     }
 
     public function jsonDecode()
     {
-        if (self::$response) {
-            self::$response = json_decode(self::$response, true);
+        $responses = self::$responses;
+
+        if (is_array(self::$responses)) {
+            self::$responses = array();
+            foreach($responses as $response) {
+                self::$responses[] = json_decode($response, true);
+            }
+        } else {
+            self::$responses = json_decode($responses, true);
         }
 
         return $this;
@@ -88,14 +106,14 @@ class API
 
     public static function site_url($param = "")
     {
-        return 'http://dev.classbyte.net/api' . $param;
+        return 'http://dev.classbyte.net/api/' . ltrim($param, '/');
     }
 
     public function insertCourseClasses()
     {
-        if (!self::$response || isset(self::$response['code'])) return;
+        if (!self::$responses || isset(self::$responses['code'])) return;
 
-        foreach (self::$response as $course) {
+        foreach (self::$responses as $course) {
             foreach ($course['classes'] as $class) {
                 $title = $class['coursetypename'] . ' ' . date("F-d-Y", strtotime($class['coursedate'])) . ' ' . $class['location'] . ' Class ' . $class['scheduledcoursesid'];
 

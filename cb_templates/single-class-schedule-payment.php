@@ -3,9 +3,9 @@ namespace CB;
 
 include_once('single-class/header.php');
 
-API::$apiurls['courses']['paid/:id'] = '/courses/paid/' . $fcd['scheduledcoursesid'];
+$course_id = $fcd['scheduledcoursesid'];
 
-$paid = API::post(API::$apiurls['courses']['paid/:id'])->jsonDecode()->getResponse();
+$paid = API::post("course/paid/{$course_id}")->jsonDecode()->getResponse();
 
 if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
 ?>
@@ -19,7 +19,7 @@ if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
 </div>
 <?php
 } else {
-    $user_data = API::post(API::$apiurls['users']['info'])->jsonDecode()->getResponse();
+    $user_data = API::post('users/info')->jsonDecode()->getResponse();
     $user_data = $user_data['object'];
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>

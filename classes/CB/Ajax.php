@@ -31,8 +31,10 @@ class Ajax
              * Enroll form validation
              */
             if ($_POST['form_name'] === "cb_enroll_form") {
-                if (!wp_verify_nonce($form_data['course_token'], $form_data['course_id'])) {
-                    wp_send_json_error("Invalid token");
+                if (!wp_verify_nonce($form_data['course_token'], $form_data['course_id'])
+                    && !wp_verify_nonce($form_data['class_token'], $form_data['class_id'])
+                ) {
+                    wp_send_json_error("Invalid tokens");
                 }
             }
 
@@ -130,11 +132,32 @@ class Ajax
             } else {
                 switch ($_POST['form_name']) {
                     case 'cb_enroll_form':
-                        $data = return_include_once('single-class-schedule-register.php', $form_data);
-                        wp_send_json_success($data);
+                        $api_post = API::post('course/enroll', $form_data);
+                        $response = $api_post->jsonDecode()->getResponse();
+
+                        if (isset($response['success'], $response['action'])) {
+                            if ($response['success'] == true) {
+                                $response['redirect'] = get_permalink($form_data['class_id']) . CB_ENDPOINT_PAYMENT;
+                                wp_send_json_success($response);
+                            } else {
+                                wp_send_json_success($response);
+                            }
+                        }
+
+                        if (isset($response['error'])) {
+                            wp_send_json_success(array(
+                                'noDelay' => true,
+                                'redirect' => get_permalink($form_data['class_id']) . CB_ENDPOINT_REGISTER
+                            ));
+                        }
+
+                        wp_send_json_error(array(
+                            'message' => 'Something went wrong.'
+                        ));
+
                         break;
                     case 'cb_reg_form':
-                        $api_post = API::post(API::$apiurls['sign']['up'], $form_data);
+                        $api_post = API::post('sign/up', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
 
                         if (isset($response['success'], $response['action']) && $response['message'] !== '') {
@@ -152,7 +175,7 @@ class Ajax
 
                         break;
                     case 'cb_login_form':
-                        $api_post = API::post(API::$apiurls['sign']['in'], $form_data);
+                        $api_post = API::post('sign/in', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
 
                         if (isset($response['success'], $response['action'])) {
@@ -170,7 +193,7 @@ class Ajax
 
                         break;
                     case 'cb_payment_form':
-                        $api_post = API::post(API::$apiurls['payment']['pay'], $form_data);
+                        $api_post = API::post('payment/pay', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
 
                         if (isset($response['success'], $response['action'])) {
@@ -208,7 +231,7 @@ class Ajax
 
         switch ($event) {
             case 'sign_out':
-                $response = API::post(API::$apiurls['sign']['out'])->jsonDecode()->getResponse();
+                $response = API::post('sign/out')->jsonDecode()->getResponse();
                 break;
             default:
                 $response = null;

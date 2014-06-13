@@ -26,4 +26,4 @@ if (isset($wp_query->query_vars['register'])) {
 </div>
 
 <div id="cb-form-area" class="clearfix">
-    <?php if (is_student_logged_in()) echo sign_out_link(); ?>
+    <?php echo sign_out_link(); ?>

@@ -6,7 +6,7 @@
             <?php echo $fcd['course']; ?> class in <?php echo $fcd['location']; ?>
         </h3>
     </div>
-    <form method="post" action="<?php echo get_permalink() . 'register'; ?>">
+    <form method="post" action="<?php echo get_permalink() . 'register'; ?>" id="cb_forms-only-ajax" name="cb_enroll_form">
         <div class="table-responsive">
             <table class="table table-striped">
                 <tbody>
@@ -60,6 +60,8 @@
                         <input type="submit" class="btn" value="ENROLL">
                         <input type="hidden" value="<?php echo wp_create_nonce($fcd['scheduledcoursesid']); ?>" name="course_token">
                         <input type="hidden" value="<?php echo $fcd['scheduledcoursesid']; ?>" name="course_id">
+                        <input type="hidden" value="<?php echo wp_create_nonce($post->ID); ?>" name="class_token">
+                        <input type="hidden" value="<?php echo $post->ID; ?>" name="class_id">
                         <input type="hidden" value="<?php echo wp_create_nonce('cb_forms-only-ajax'); ?>" name="_cb_nonce">
                     </td>
                 </tr>
