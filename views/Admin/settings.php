@@ -36,7 +36,14 @@
             </table>
 
             <table class="form-table" id="styles">
-                <tr><td>Coming soon</td></tr>
+                <tr valign="top">
+                    <th scope="row"><label for="cb_custom_css">Custom CSS:</label></th>
+                    <td>
+                        <textarea name="cb_custom_css" cols="50" rows="15" id="cb_custom_css"><?php echo get_option('cb_custom_css'); ?></textarea>
+                        <p class="description">Above styles will be applied to every posts/pages created by this plugin.</p>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
             </table>
         </div>
         <?php submit_button(); ?>

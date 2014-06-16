@@ -38,6 +38,7 @@ class Dashboard
     {
         register_setting('cb-settings', 'cb_cb_username');
         register_setting('cb-settings', 'cb_cb_api');
+        register_setting('cb-settings', 'cb_custom_css');
     }
 
     public function admin_scripts()

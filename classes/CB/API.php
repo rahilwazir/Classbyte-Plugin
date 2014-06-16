@@ -20,20 +20,22 @@ class API
         self::$email = get_option('cb_cb_username');
         self::$apikey = get_option('cb_cb_api');
 
-        if (is_array($url)) {
+        /*if (is_array($url)) {
             $uris = array();
             foreach($url as $u) {
                 $uris[] = self::site_url($u);
             }
         } else {
             $url = self::site_url($url);
-        }
+        }*/
+
+        $url = self::site_url($url);
 
         if (!self::$email || !self::$apikey) {
             $url = self::site_url('no');
         }
 
-        $curl = new CURL();
+        /*$curl = new CURL();
 
         $opts = array(
             CURLOPT_RETURNTRANSFER => true,
@@ -63,9 +65,9 @@ class API
         if (is_array($response))
             self::$responses = $response;
 
-        $curl->clear();
+        $curl->clear();*/
 
-        /*$ch = curl_init();
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERPWD, self::$email . ":" . self::$apikey);
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -82,7 +84,7 @@ class API
 
         $response = curl_exec($ch);
 
-        curl_close($ch);*/
+        curl_close($ch);
         self::$responses = $response;
 
         return new self;
@@ -92,7 +94,7 @@ class API
     {
         $responses = self::$responses;
 
-        if (is_array(self::$responses)) {
+        /*if (is_array(self::$responses)) {
             self::$responses = array();
             foreach($responses as $response) {
                 self::$responses[] = json_decode($response, true);
@@ -100,6 +102,8 @@ class API
         } else {
             self::$responses = json_decode($responses, true);
         }
+        */
+        self::$responses = json_decode($responses, true);
 
         return $this;
     }

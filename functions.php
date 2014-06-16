@@ -176,3 +176,15 @@ function format_course_date($date, $time, $endtime)
 
     echo $new_date . ' ' . $new_time . ' - ' . $new_end_time;
 }
+
+function is_recursive_page(array $pages)
+{
+    if (!empty($pages)) {
+        foreach ($pages as $page) {
+            if ( is_page((int) $page) )
+                return true;
+        }
+    }
+
+    return false;
+}

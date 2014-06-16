@@ -21,8 +21,14 @@ if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
 } else {
     $user_data = API::post('users/info')->jsonDecode()->getResponse();
     $user_data = $user_data['object'];
+
+    $mode = API::post("payment/mode")->jsonDecode()->getResponse();
+
+    if (isset($mode['success'], $mode['action'])) {
+        if ($mode['message'] === "stripe")
+            echo '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>';
+    }
 ?>
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
     <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_payment_form">
         <div class="pull-left col-md-5">

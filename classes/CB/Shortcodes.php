@@ -14,13 +14,9 @@ class Shortcodes
 
     public function classListing($atts, $content = null)
     {
-        # PostsPages::deleteAll(true);
+        PostsPages::deleteAll(true);
 
-        $r = API::post(array(
-            'course/listing',
-            'payment/stripe-public-key'
-        ))->jsonDecode()->getResponse();
-        var_dump($r);
+        API::post('course/listing')->jsonDecode()->insertCourseClasses();
 
         include CB_TEMPLATES . 'page-class-schedule.php';
     }

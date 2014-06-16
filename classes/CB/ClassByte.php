@@ -17,6 +17,17 @@ class ClassByte
         new Ajax();
 
         add_action('wp_enqueue_scripts', array($this, 'scripts'));
+
+        add_action('template_redirect', function () {
+            if (is_singular(Posttypes::$post_type) || is_recursive_page(get_option('cb_post_page_ids'))) {
+                $custom_css = get_option('cb_custom_css');
+                if ($custom_css) {
+                    add_action('wp_head', function () use (&$custom_css) {
+                        echo '<style type="text/css" id="cb_custom_css">'.$custom_css.'</style>';
+                    });
+                }
+            }
+        });
     }
 
     public static function activation()
