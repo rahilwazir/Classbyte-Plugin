@@ -201,8 +201,20 @@ var CB = (function($) {
             complete: function () {
                 self.next('.progress-loader').remove();
             }
-        })
+        });
     });
+
+    // Checking for possible already bootstrap css (improve if you can https://gist.github.com/rahilwazir/6d745cd89f514401eda9)
+    /*
+    $('link').each(function (index, element){
+        var bootExist = /bootstrap\.(?:min\.)?css/.test($(element).prop('href'));
+
+         if (bootExist) {
+            // $('link#bootstrap-css-css').remove();
+             return false;
+         }
+    });
+    */
 
     return r;
 }(jQuery));

@@ -16,7 +16,7 @@ class ClassByte
         new Posttypes();
         new Ajax();
 
-        add_action('wp_enqueue_scripts', array($this, 'scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'scripts'), 9999);
 
         add_action('template_redirect', array($this, 'customCss'));
     }
