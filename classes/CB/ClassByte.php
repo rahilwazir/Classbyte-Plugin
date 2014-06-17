@@ -18,16 +18,7 @@ class ClassByte
 
         add_action('wp_enqueue_scripts', array($this, 'scripts'));
 
-        add_action('template_redirect', function () {
-            if (is_singular(Posttypes::$post_type) || is_recursive_page(get_option('cb_post_page_ids'))) {
-                $custom_css = get_option('cb_custom_css');
-                if ($custom_css) {
-                    add_action('wp_head', function () use (&$custom_css) {
-                        echo '<style type="text/css" id="cb_custom_css">'.$custom_css.'</style>';
-                    });
-                }
-            }
-        });
+        add_action('template_redirect', array($this, 'customCss'));
     }
 
     public static function activation()
@@ -82,7 +73,7 @@ class ClassByte
         wp_enqueue_script('cb', ASSETS_URL . 'js/cb.js', array('jquery'), false, true);
 
         wp_enqueue_style('bootstrap-css', ASSETS_URL . 'css/bootstrap.min.css');
-        wp_enqueue_style('bootstrap-theme-css', ASSETS_URL . 'css/bootstrap-theme.min.css');
+        // wp_enqueue_style('bootstrap-theme-css', ASSETS_URL . 'css/bootstrap-theme.min.css');
         wp_enqueue_style('main-css', ASSETS_URL . 'css/style.css');
 
         wp_localize_script('cb', 'cbConfig', array(
@@ -92,5 +83,43 @@ class ClassByte
             'COOKIEPATH' => COOKIEPATH,
             'CB_COOKIE_NAME' => CB_COOKIE_NAME
         ));
+    }
+
+    public function customCss()
+    {
+        if (!is_singular(Posttypes::$post_type) && is_recursive_page(get_option('cb_post_page_ids')) == false)
+            return;
+
+        $custom_css = get_option('cb_custom_css');
+        $accordion_tab = get_option('cb_accordion_tab');
+        $circle_steps = get_option('cb_circle_steps');
+        $circle_active_steps = get_option('cb_circle_active_steps');
+        $circle_straight_line = get_option('cb_circle_straight_line');
+        $button_color = get_option('cb_button_color');
+        $button_hover_color = get_option('cb_button_hover_color');
+
+        if (!empty($accordion_tab))
+            $custom_css .= ".panel-default > .panel-heading { background-color: {$accordion_tab}; }";
+
+        if (!empty($circle_steps))
+            $custom_css .= "#progressbar li:before { background-color: {$circle_steps}; }";
+
+        if (!empty($circle_active_steps))
+            $custom_css .= "#progressbar li.active:before, #progressbar li.active:after { background-color: {$circle_active_steps}; }";
+
+        if (!empty($circle_straight_line))
+            $custom_css .= "#progressbar li:after { background-color: {$circle_straight_line}; }";
+
+        if (!empty($button_color))
+            $custom_css .= 'button, input[type="submit"], input[type="button"], input[type="reset"] { background: '.$button_color.'; border: none; }';
+
+        if (!empty($button_color))
+            $custom_css .= 'button:hover, button:focus, input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:focus, input[type="button"]:focus, input[type="reset"]:focus { background: '.$button_hover_color.'; border: none; }';
+
+        if ($custom_css) {
+            add_action('wp_head', function () use (&$custom_css) {
+                echo '<style type="text/css" id="cb_custom_css">'.$custom_css.'</style>';
+            });
+        }
     }
 }
