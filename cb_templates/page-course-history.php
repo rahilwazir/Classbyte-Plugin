@@ -43,7 +43,7 @@
             </tr>
             <?php endforeach; } else { ?>
             <tr>
-                <td style="text-align: center;" colspan="6"><h2>No course history.</h2></td>
+                <td style="text-align: center;" colspan="7"><h2>No course history.</h2></td>
             </tr>
             <?php } ?>
         </tbody>
