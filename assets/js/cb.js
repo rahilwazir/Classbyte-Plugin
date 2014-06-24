@@ -6,15 +6,37 @@
  * License: Not for public use
  */
 var CB = (function($) {
-    var r = {};
+
+    function _extends(defaults, options) {
+        if (typeof defaults !== "object" && typeof options !== "object") {
+            return {};
+        }
+
+        for (var i in options) {
+            if (options.hasOwnProperty(i)) {
+                for (var x in defaults) {
+                    if (x !== i) {
+                        defaults[i] = options[i];
+                    }
+                }
+            }
+        }
+
+        return defaults;
+    }
+
+    function isArray(__var) {
+        if (Object.prototype.toString.call(__var) === '[object Array]') {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Private
      */
     var cb_form_area = $('#cb-form-area'),
-        step_progress = $('#progressbar'),
-        step_progress_length = step_progress.find('li').length - 1,
-        last_step_progress = step_progress.find('li.active').eq(-1).index(),
         submitAjax = true;
 
     /**
@@ -83,7 +105,9 @@ var CB = (function($) {
 
                             $('#cb_forms-only-ajax').slideUp('fast', function() {
                                 if (result.data.message) {
-                                    cb_form_area.append('<div class="alert alert-success">' + result.data.message + ' Please wait while you\'re being redirecting...</div>');
+                                    alertMessages({
+                                        message: result.data.message + ' Please wait while you\'re being redirecting...'
+                                    });
                                 }
 
                                 if (result.data.hasOwnProperty('noDelay')
@@ -96,38 +120,38 @@ var CB = (function($) {
                                     location.replace(result.data.redirect);
                                 }, delay);
                             });
-                        }
-
-                        if (result.data !== "") {
-                            if (last_step_progress <= step_progress_length) {
-                                step_progress.find('li').eq(last_step_progress + 1).addClass('active');
-                            } else {
-                                last_step_progress = step_progress_length;
-                            }
-
-                            cb_form_area.empty().append(result.data);
+                        } else if (result.data.message) {
+                            switchForm({
+                                complete: alertMessages({
+                                    message: result.data.message
+                                })
+                            });
                         }
                     } else if (result.success == false) {
                         if (result.data !== "") {
-                            var error_data = result.data;
-                            var display_errors = '<div class="alert alert-danger">';
+                            var error_data = result.data,
+                                display_errors = new Array();
+
                             if (error_data.message) {
-                                display_errors += '<p>' + error_data.message + '</p>'
+                                display_errors.push(error_data.message);
                             } else {
                                 var labels = Object.keys(error_data);
 
                                 $("#" + labels.join(', #')).each(function () {
                                     if (error_data[$(this).prop('id')]) {
-                                        display_errors += '<p>' + $('label[for="' + $(this).prop('id') + '"], label[data-for="' + $(this).prop('id') + '"]').text().replace(' *', '');
-                                        display_errors += ' ' + error_data[$(this).prop('id')];
-                                        display_errors += '</p>';
-
+                                        display_errors.push(
+                                            $('label[for="' + $(this).prop('id') + '"], label[data-for="' + $(this).prop('id') + '"]')
+                                            .text() .replace(' *', '') + ' ' + error_data[$(this).prop('id')]
+                                        );
                                         $(this).closest('.form-group').addClass('has-error');
                                     }
                                 });
                             }
-                            display_errors += '</div>';
-                            cb_form_area.prepend(display_errors);
+                            
+                            alertMessages({
+                                success: false,
+                                messages: display_errors
+                            });
                         }
                     }
                 } catch(e) {
@@ -140,25 +164,69 @@ var CB = (function($) {
             }
         });
     });
+    
+    /**
+     * Display success or error messages
+     */
+    function alertMessages(options) {
+        var defaults = {
+                appendTo: cb_form_area,
+                success: true
+            },
+            options = _extends(defaults, options),
+            display_messages = '';
+
+        if (options.success) {
+            display_messages = '<div class="alert alert-success">';
+        } else {
+            display_messages = '<div class="alert alert-danger">';
+        }
+
+        if (options.message) {
+            display_messages += '<p>' + options.message + '</p>';
+        } else if (options.messages && isArray(options.messages)) {
+            var i = 0;
+            for(; i < options.messages.length; i++) {
+                display_messages += '<p>' + options.messages[i] + '</p>';
+            }
+        }
+
+        display_messages += '</div>';
+
+        if (options.appendTo) {
+            options.appendTo.prepend(display_messages);
+        }
+    }
 
     /**
      * Switch Login/Register form
      */
-    $(document).on('click', 'a[data-switch-form]', function(e) {
-        e.preventDefault();
-
-        var login_form = $('form[name=cb_login_form]'),
-            reg_form = $('form[name=cb_reg_form]');
-
-        $('.alert').remove();
+    function switchForm(options) {
+        var options = options || {},
+            login_reg_form = $('form.reg-page'),
+            reg_form = $('#cb_reg_form'),
+            login_form = $('#cb_login_form');
 
         if (!login_form.is(':visible')) {
+            login_reg_form.prop('name', 'cb_login_form');
             login_form.show();
             reg_form.hide();
         } else {
+            login_reg_form.prop('name', 'cb_reg_form');
             login_form.hide();
             reg_form.show();
         }
+
+        // complete callback
+        if (typeof options.complete === "function") {
+            options.complete();
+        }
+    }
+
+    $(document).on('click', 'a[data-switch-form]', function(e) {
+        e.preventDefault();
+        $('.alert').remove();
+        switchForm();
     });
 
     $(document).on('click', '.mini-request', function(e) {
@@ -174,7 +242,7 @@ var CB = (function($) {
             default:
                 break;
         }
-
+        
         $.ajax({
             type: 'POST',
             url: cbConfig.ajax_url,
@@ -203,18 +271,8 @@ var CB = (function($) {
             }
         });
     });
-
-    // Checking for possible already bootstrap css (improve if you can https://gist.github.com/rahilwazir/6d745cd89f514401eda9)
-    /*
-    $('link').each(function (index, element){
-        var bootExist = /bootstrap\.(?:min\.)?css/.test($(element).prop('href'));
-
-         if (bootExist) {
-            // $('link#bootstrap-css-css').remove();
-             return false;
-         }
+    
+    $('#map-canvas').css({
+        height: parseInt($('#course_information .table-responsive').height(), 10) + 'px'
     });
-    */
-
-    return r;
 }(jQuery));

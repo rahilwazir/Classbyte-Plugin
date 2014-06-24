@@ -153,7 +153,7 @@ class Posttypes
 
             $result = array_merge(array (
                 'title' => get_the_title(),
-                'url' => get_the_permalink(),
+                'url' => get_permalink(),
                 'datetime' => get_post_meta(get_the_ID(), 'cb_course_date_time', true),
                 'location' => get_post_meta(get_the_ID(), 'cb_course_location', true),
             ), $full_object);

@@ -146,8 +146,8 @@ class Ajax
 
                         if (isset($response['error'])) {
                             wp_send_json_success(array(
-                                'noDelay' => true,
-                                'redirect' => get_permalink($form_data['class_id']) . CB_ENDPOINT_REGISTER
+                                'redirect' => get_permalink($form_data['class_id']) . CB_ENDPOINT_REGISTER,
+                                'message' => 'You need to register before you enroll to the course.'
                             ));
                         }
 
@@ -162,8 +162,7 @@ class Ajax
 
                         if (isset($response['success'], $response['action']) && $response['message'] !== '') {
                             if ($response['success'] == true) {
-                                $data = return_include_once('class-schedule-login.php', $response);
-                                wp_send_json_success($data);
+                                wp_send_json_success($response);
                             } else {
                                 wp_send_json_error($response);
                             }

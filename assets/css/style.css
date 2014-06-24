@@ -40,57 +40,58 @@
     position: relative;
     z-index: 2;
 }
-#progressbar li {
-    float: left;
-    font-size: 14px;
-    font-weight: bold;
-    list-style-type: none;
-    position: relative;
-    text-transform: uppercase;
-    width: 33.33%;
+    #progressbar li {
+        float: left;
+        font-size: 14px;
+        font-weight: bold;
+        list-style-type: none;
+        position: relative;
+        text-transform: uppercase;
+        width: 33.33%;
 
-}
-#progressbar li.active:before, #progressbar li.active:after {
-    background: none repeat scroll 0 0 #EE2D23;
-    color: #FFFFFF;
-}
-#progressbar li:before {
-    background: none repeat scroll 0 0 threedlightshadow;
-    border-radius: 53px;
-    box-shadow: 1px 1px 0 0;
-    color: #333333;
-    content: counter(step, decimal);
-    counter-increment: step;
-    display: block;
-    font-size: 40px;
-    line-height: 70px;
-    margin: 0 auto 5px;
-    width: 70px;
-    z-index: 1;
-    position: relative;
-}
-#progressbar li:first-child:after {
-    content: none;
-}
-#progressbar li:after {
-    background: none repeat scroll 0 0 threedlightshadow;
-    content: "";
-    height: 2px;
-    left: -50%;
-    position: absolute;
-    top: 35px;
-    width: 100%;
-}
-#progressbar li.active {
-    color: #EE2D23;
-}
-#progressbar a {
-    color: #000000;
-}
+    }
+    #progressbar li.active:before, #progressbar li.active:after {
+        background: none repeat scroll 0 0 #EE2D23;
+        color: #FFFFFF;
+    }
+    #progressbar li:before {
+        background: none repeat scroll 0 0 threedlightshadow;
+        border-radius: 53px;
+        box-shadow: 1px 1px 0 0;
+        color: #333333;
+        content: counter(step, decimal);
+        counter-increment: step;
+        display: block;
+        font-size: 40px;
+        line-height: 70px;
+        margin: 0 auto 5px;
+        width: 70px;
+        z-index: 1;
+        position: relative;
+    }
+    #progressbar li:first-child:after {
+        content: none;
+    }
+    #progressbar li:after {
+        background: none repeat scroll 0 0 threedlightshadow;
+        content: "";
+        height: 2px;
+        left: -50%;
+        position: absolute;
+        top: 35px;
+        width: 100%;
+    }
+    #progressbar li.active {
+        color: #EE2D23;
+    }
+    #progressbar a {
+        color: #000000;
+    }
+
 .reg-page {
     padding: 30px 40px;
 }
-form.reg-page:nth-of-type(2) {
+.single #cb_login_form {
     display: none;
 }
 .reg-page, .login-page {
@@ -110,6 +111,7 @@ form.reg-page:nth-of-type(2) {
     .reg-header h2, .reg-header p {
         margin-bottom: 10px;
     }
+
 #class_details {
     box-shadow: 0px 0px 1px 1px rgb(204, 204, 204);
 }

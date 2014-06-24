@@ -18,7 +18,7 @@ class Shortcodes
 
         API::post('course/listing')->jsonDecode()->insertCourseClasses();
 
-        include CB_TEMPLATES . 'page-class-schedule.php';
+        include_once CB_TEMPLATES . 'page-class-schedule.php';
     }
 
     public function scheduleLogin($atts, $content = null)
@@ -28,11 +28,16 @@ class Shortcodes
             'reg_header' => "no"
         ), $atts));
 
-        if ($parent == "yes") echo '<div id="cb-form-area" class="clearfix">';
+        if ($parent == "yes") {
+            echo '<div id="cb-form-area" class="clearfix">';
+            echo '<form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_login_form">';
+        }
 
-        include CB_TEMPLATES . 'class-schedule-login.php';
+        include_once CB_TEMPLATES . 'class-schedule-login.php';
 
-        if ($parent == "yes") echo '</div>';
+        if ($parent == "yes") {
+            echo '</form></div>';
+        }
     }
 
     public function courseHistory($atts, $content = null)
@@ -45,6 +50,6 @@ class Shortcodes
             $course_history = $response['object'];
         }
 
-        include CB_TEMPLATES . 'page-course-history.php';
+        include_once CB_TEMPLATES . 'page-course-history.php';
     }
 }
