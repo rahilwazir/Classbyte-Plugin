@@ -1,6 +1,4 @@
 <?php
-namespace CB;
-
 if (!defined("ABSPATH")) exit;
 
 /**
@@ -114,7 +112,7 @@ function return_include_once($template, $data = array())
  */
 function is_student_logged_in()
 {
-    $response = API::post('auth/userin')->jsonDecode()->getResponse();
+    $response = CB\API::post('auth/userin')->jsonDecode()->getResponse();
 
     if (isset($response['success'], $response['action'])
         && $response['success'] == true
@@ -132,7 +130,7 @@ function is_student_logged_in()
  */
 function cb_sign_out()
 {
-    $response = API::post('sign/out')->jsonDecode()->getResponse();
+    $response = CB\API::post('sign/out')->jsonDecode()->getResponse();
     if (isset($response['success'], $response['action'])
         && $response['success'] == true
         && $response['action'] == 1
@@ -149,9 +147,14 @@ function sign_out_link()
         echo '<div class="col-md-12 text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
 }
 
-function get_df_data(&$key, $default = '')
+function get_df_data(&$key, $default = '', $sanitize = true)
 {
-    return sanitize_text_field((isset($key)) ? $key : $default);
+    $_key = (isset($key)) ? $key : $default;
+
+    if ($sanitize)
+        return sanitize_text_field($_key);
+    else
+        return $_key;
 }
 
 /**
@@ -164,7 +167,7 @@ function get_permalink_by_slug($slug)
 
 function format_course_date($date, $time, $endtime)
 {
-    $datetime = new \DateTime();
+    $datetime = new DateTime();
     $datetime->setTimestamp(strtotime($date));
     $new_date = $datetime->format('l, M j, Y');
 

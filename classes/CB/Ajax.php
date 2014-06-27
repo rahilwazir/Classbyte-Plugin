@@ -147,7 +147,7 @@ class Ajax
                         if (isset($response['error'])) {
                             wp_send_json_success(array(
                                 'redirect' => get_permalink($form_data['class_id']) . CB_ENDPOINT_REGISTER,
-                                'message' => 'You need to register before you enroll to the course.'
+                                'message' => 'You need to login/register before you enroll to the course.'
                             ));
                         }
 

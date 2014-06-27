@@ -106,7 +106,7 @@ var CB = (function($) {
                             $('#cb_forms-only-ajax').slideUp('fast', function() {
                                 if (result.data.message) {
                                     alertMessages({
-                                        message: result.data.message + ' Please wait while you\'re being redirecting...'
+                                        message: result.data.message + ' Please wait while you\'re being redirected...'
                                     });
                                 }
 

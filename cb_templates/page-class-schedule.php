@@ -1,10 +1,9 @@
-<?php namespace CB; ?>
 <div class="full_width col-md-12">
     <div class="sub_accordian" style="float: left; width: 100% ! important;">
         <div class="panel-group" id="accordion">
             <?php
-            if (Posttypes::havePosts()) {
-                $courses = Posttypes::queryPosts();
+            if (CB\Posttypes::havePosts()) {
+                $courses = CB\Posttypes::queryPosts();
                 foreach ($courses as $course) :
             ?>
                 <!-- repeat certificates -->
@@ -25,14 +24,14 @@
                             foreach($course['classes'] as $class) :
                             ?>
                             <!-- repeat classes -->
-                            <table width="100%"  border="1" class="classdatestable">
+                            <table width="100%"  border="1" class="table table-bordered">
                                 <tr>
                                     <td>
-                                        <div class="nostyle">
-                                            <a href="<?php echo $class['url']; ?>">
+                                        <div>
+                                            <a href="<?php echo $class['url']; ?>" class="pull-left">
                                                 <?php echo $class['datetime']; ?>
                                             </a>
-                                            <div class="rightaligngreysmall"><?php echo $class['location']; ?></div>
+                                            <div class="pull-right"><?php echo $class['location']; ?></div>
                                         </div>
                                     </td>
                                 </tr>
