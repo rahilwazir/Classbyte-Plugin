@@ -7,8 +7,8 @@
  */
 var CB = (function($) {
 
-    function _extends(defaults, options) {
-        if (typeof defaults !== "object" && typeof options !== "object") {
+    function _extend(defaults, options) {
+        if (typeof defaults !== "object" || typeof options !== "object") {
             return {};
         }
 
