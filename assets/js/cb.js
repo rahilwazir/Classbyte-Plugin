@@ -173,7 +173,7 @@ var CB = (function($) {
                 appendTo: cb_form_area,
                 success: true
             },
-            options = _extends(defaults, options),
+            options = _extend(defaults, options),
             display_messages = '';
 
         if (options.success) {
