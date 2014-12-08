@@ -20,7 +20,7 @@
     </div>
     <div class="form-group">
         <label for="cb_login_password">Password</label>
-        <input type="password" id="cb_login_password" name="cb_login_password" value="" autocomplete="off" class="form-control">
+        <input type="password" id="cb_login_password" name="cb_login_password"  value="" autocomplete="off" class="form-control">
     </div>
     <hr>
     <input type="hidden" name="_cb_nonce" value="<?php echo wp_create_nonce('cb_forms-only-ajax'); ?>">

@@ -50,8 +50,6 @@ var CB = (function($) {
         if ($form.prop('name') == "cb_payment_form" && $form.find('input[name=stripeToken]').length < 1) {
             submitAjax = false;
 
-            Stripe.setPublishableKey('pk_test_yDqOpZs98ool13VgFRAil8DB');
-
             var stripeResponseHandler = function(status, response) {
                 if (response.error) {
                     cb_form_area.find('.alert').remove();
@@ -67,7 +65,12 @@ var CB = (function($) {
 
             $form.find('button').prop('disabled', true);
 
-            Stripe.card.createToken($form, stripeResponseHandler);
+            try {
+                Stripe.card.createToken($form, stripeResponseHandler);
+            } catch (e) {
+                submitAjax = true;
+                console.log(e);
+            }
         }
 
         if (submitAjax == false) {
@@ -173,7 +176,7 @@ var CB = (function($) {
                 appendTo: cb_form_area,
                 success: true
             },
-            options = _extends(defaults, options),
+            options = _extend(defaults, options),
             display_messages = '';
 
         if (options.success) {

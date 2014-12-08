@@ -7,9 +7,10 @@ $course_id = $fcd['scheduledcoursesid'];
 
 $paid = API::post("course/paid/{$course_id}")->jsonDecode()->getResponse();
 
+$stripePublicKey = API::post("payment/stripePublicKey")->jsonDecode()->getResponse();
 if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
 ?>
-<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
+<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2" style="min-width: 520px !important;">
     <form class="reg-page" id="cb_forms-only-ajax" method="post" name="cb_payment_form">
         <p class="text-center">
             <img src="<?php echo ASSETS_URL . 'img/thumbs_up.png'; ?>" alt=""><br><br>
@@ -23,10 +24,11 @@ if (isset($paid['success'], $paid['action']) && $paid['success'] == true) {
     $user_data = $user_data['object'];
 
     $mode = API::post("payment/mode")->jsonDecode()->getResponse();
-
     if (isset($mode['success'], $mode['action'])) {
-        if ($mode['message'] === "stripe")
+        if ($mode['message'] === "stripe") {
             echo '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>';
+            echo '<script type="text/javascript">Stripe.setPublishableKey("'.$stripePublicKey['object']['key'].'");</script>';
+        }
     }
 ?>
 <div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">

@@ -90,11 +90,11 @@
             </div>
             <div class="form-group">
                 <label for="studentphone">Phone Number</label>
-                <input class="form-control" type="text" value="" id="studentphone" name="studentphone">
+                <input class="form-control"   data-mask="999-999-9999" type="text" value="" id="studentphone" name="studentphone">
             </div>
             <div class="form-group">
                 <label for="studentmobilephone">Mobile Number</label>
-                <input class="form-control" type="text" value="" name="studentmobilephone" id="studentmobilephone">
+                <input class="form-control" type="text"  data-mask="999-999-9999"  value="" name="studentmobilephone" id="studentmobilephone">
             </div>
             <div class="form-group">
                 <label for="studentemddress">Email Address *</label>

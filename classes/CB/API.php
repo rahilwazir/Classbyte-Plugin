@@ -35,6 +35,10 @@ class API
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_SSLVERSION, 3);
+        curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'SSLv3');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         if (isset($_COOKIE[CB_COOKIE_NAME])) {
@@ -42,7 +46,7 @@ class API
         }
 
         $response = curl_exec($ch);
-
+        # var_dump($response);
         curl_close($ch);
         self::$responses = $response;
 
@@ -60,7 +64,7 @@ class API
 
     public static function site_url($param = "")
     {
-        return 'http://dev.classbyte.net/api/' . ltrim($param, '/');
+        return 'https://classes.cprtrainingschool.com/api/' . ltrim($param, '/');
     }
 
     public function insertCourseClasses()

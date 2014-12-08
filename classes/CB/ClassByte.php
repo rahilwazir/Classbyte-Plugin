@@ -69,6 +69,7 @@ class ClassByte
         wp_enqueue_script('bootstrap-js', ASSETS_URL . 'js/bootstrap.min.js', array('jquery'), false, true);
         wp_enqueue_script('jquery-cookie-js', ASSETS_URL . 'js/jquery.cookie.js', array('jquery'), false, true);
         wp_enqueue_script('cb', ASSETS_URL . 'js/cb.js', array('jquery'), false, true);
+		wp_enqueue_script('mask', 'http://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js', array('jquery'), false, true);
 
         wp_enqueue_style('bootstrap-css', ASSETS_URL . 'css/bootstrap.min.css');
         // wp_enqueue_style('bootstrap-theme-css', ASSETS_URL . 'css/bootstrap-theme.min.css');

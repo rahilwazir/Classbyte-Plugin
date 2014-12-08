@@ -118,3 +118,27 @@
 .mini-request {
     margin-right: 10px;
 }
+
+.full_width.col-md-12.centered {
+    max-width: 604px;
+    height: 251px;
+    margin-top: 50px;
+}
+.centered {
+    float: none;
+    margin: 0 auto;
+}
+
+#form-steps {
+    margin-top: 50px;
+    /*margin-left: 170px;*/
+}
+
+.col-md-8.col-md-offset-2.col-sm-8.col-sm-offset-2 {
+    /*min-width:520px;*/
+    /*margin-left: 50px;*/
+}
+.col-md-12.text-right {
+    margin-left: -17%;
+    margin-bottom: 1%;
+}

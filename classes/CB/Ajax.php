@@ -62,7 +62,7 @@ class Ajax
                     : (($form_data['studentpassword'] !== $form_data['studentpassword2']) ? __('did not match.') : '');
 
             }
-
+			
             /**
              * Login form validation
              */

@@ -1,4 +1,4 @@
-<div class="full_width col-md-12">
+<div class="full_width col-md-12 centered">
     <div class="sub_accordian" style="float: left; width: 100% ! important;">
         <div class="panel-group" id="accordion">
             <?php
@@ -8,14 +8,14 @@
             ?>
                 <!-- repeat certificates -->
                 <div class="panel panel-default">
-                    <div class="panel-heading">
+                    <div class="panel-heading" role="tab">
                         <h4 class="panel-title no-margin">
-                            <a href="#collapse<?php echo $course['category']['cat_id']; ?>" data-parent="#accordion" data-toggle="collapse">
+                            <button class="btn-link" href="#collapse<?php echo $course['category']['cat_id']; ?>" data-parent="#accordion" data-toggle="collapse">
                                 <?php echo $course['classes'][0]['agency'] . ' ' . $course['classes'][0]['course']; ?>
-                            </a>
+                            </button>
                         </h4>
                     </div>
-                    <div id="collapse<?php echo $course['category']['cat_id'];; ?>" class="panel-collapse collapse">
+                    <div id="collapse<?php echo $course['category']['cat_id']; ?>" class="panel-collapse collapse">
                         <div class="panel-body">
                             <?php if ($course['category']['cat_comment']) {
                                 echo '<h4><strong>Course Description</strong></h4>';

@@ -191,3 +191,35 @@ function is_recursive_page(array $pages)
 
     return false;
 }
+function after_login_redirect()
+{
+    if( is_page( 'student-login' ) && is_student_logged_in() )
+    {
+        wp_redirect( home_url( '/class-schedule/' ) );
+        exit();
+    }
+}
+add_action( 'template_redirect', 'after_login_redirect' );
+function history_login_redirect()
+{
+    if( is_page( 'course-history' ) && ! is_student_logged_in() )
+    {
+		
+		home_url( '/student-login/' );
+        wp_redirect( home_url( '/student-login/' ) );
+        exit();
+    }
+}
+add_action( 'template_redirect', 'history_login_redirect' );
+function add_menu_icons_styles(){
+?>
+ 
+<style>
+#adminmenu .toplevel_page_classbyte .dashicons-admin-generic:before {
+  content: '\f176';
+}
+</style>
+ 
+<?php
+}
+add_action( 'admin_head', 'add_menu_icons_styles' );
