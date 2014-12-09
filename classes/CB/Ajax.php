@@ -127,7 +127,7 @@ class Ajax
 
                 $cb_errors['scheduledcoursesid'] = ($form_data['scheduledcoursesid'] === '') ? __('required.') : '';
 
-                $cb_errors['stripeToken'] = ($form_data['stripeToken'] === '') ? __('required.') : '';
+                $cb_errors['stripeToken'] = (isset($form_data['stripeToken']) && $form_data['stripeToken'] === '') ? __('required.') : '';
 
                 $datetime = null;
             }
