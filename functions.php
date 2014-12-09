@@ -143,8 +143,8 @@ function cb_sign_out()
 
 function sign_out_link()
 {
-    if (is_student_logged_in())
-        echo '<div class="col-md-12 text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
+    $tmpl = '<div class="text-right"><a href="#" class="mini-request" id="cb_sign_out">Sign out</a></div>';
+    return (is_student_logged_in()) ? $tmpl : '';
 }
 
 function get_df_data(&$key, $default = '', $sanitize = true)
@@ -177,7 +177,7 @@ function format_course_date($date, $time, $endtime)
     $datetime->setTimestamp(strtotime($endtime));
     $new_end_time = $datetime->format('g:i a');
 
-    echo $new_date . ' ' . $new_time . ' - ' . $new_end_time;
+    return $new_date . ' ' . $new_time . ' - ' . $new_end_time;
 }
 
 function is_recursive_page(array $pages)
@@ -204,7 +204,7 @@ function history_login_redirect()
 {
     if( is_page( 'course-history' ) && ! is_student_logged_in() )
     {
-		
+
 		home_url( '/student-login/' );
         wp_redirect( home_url( '/student-login/' ) );
         exit();
@@ -213,13 +213,13 @@ function history_login_redirect()
 add_action( 'template_redirect', 'history_login_redirect' );
 function add_menu_icons_styles(){
 ?>
- 
+
 <style>
 #adminmenu .toplevel_page_classbyte .dashicons-admin-generic:before {
   content: '\f176';
 }
 </style>
- 
+
 <?php
 }
 add_action( 'admin_head', 'add_menu_icons_styles' );

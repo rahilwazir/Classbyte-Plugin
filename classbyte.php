@@ -22,6 +22,7 @@ define('ASSETS_URL', trailingslashit(CB_URL . 'assets'));
 
 // Cookies name
 define('CB_COOKIE_NAME', '__cbapi');
+define('CB_COOKIE_ENROLL', '__cbapi_enroll');
 
 // Endpoints
 define('CB_ENDPOINT_PAYMENT', 'payment');

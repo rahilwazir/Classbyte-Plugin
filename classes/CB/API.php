@@ -7,6 +7,7 @@ class API
 {
     private static $email = "";
     private static $apikey = "";
+    private static $apiURL = "";
 
     public static $responses = array();
 
@@ -34,7 +35,7 @@ class API
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($ch, CURLOPT_SSLVERSION, 3);
         curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'SSLv3');
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -64,7 +65,8 @@ class API
 
     public static function site_url($param = "")
     {
-        return 'https://classes.cprtrainingschool.com/api/' . ltrim($param, '/');
+        self::$apiURL = get_option('cb_cb_api_url');
+        return rtrim(self::$apiURL, '/') . '/' . ltrim($param, '/');
     }
 
     public function insertCourseClasses()
@@ -72,7 +74,7 @@ class API
         if (!self::$responses || isset(self::$responses['code'])) return;
 
         foreach (self::$responses as $course) {
-            
+
             if (!isset($course['classes'])) return;
 
             foreach ($course['classes'] as $class) {

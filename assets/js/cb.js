@@ -26,11 +26,7 @@ var CB = (function($) {
     }
 
     function isArray(__var) {
-        if (Object.prototype.toString.call(__var) === '[object Array]') {
-            return true;
-        }
-
-        return false;
+        return Object.prototype.toString.call(__var) === '[object Array]';
     }
 
     /**
@@ -150,7 +146,7 @@ var CB = (function($) {
                                     }
                                 });
                             }
-                            
+
                             alertMessages({
                                 success: false,
                                 messages: display_errors
@@ -167,7 +163,7 @@ var CB = (function($) {
             }
         });
     });
-    
+
     /**
      * Display success or error messages
      */
@@ -245,7 +241,7 @@ var CB = (function($) {
             default:
                 break;
         }
-        
+
         $.ajax({
             type: 'POST',
             url: cbConfig.ajax_url,
@@ -274,7 +270,7 @@ var CB = (function($) {
             }
         });
     });
-    
+
     $('#map-canvas').css({
         height: parseInt($('#course_information .table-responsive').height(), 10) + 'px'
     });

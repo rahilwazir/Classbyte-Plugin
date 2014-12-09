@@ -17,6 +17,13 @@ class Ajax
     public function cb_handle_form()
     {
         if (isset($_POST['action'], $_POST['form_name']) && $_POST['action'] === 'cb_form') {
+
+            $referer = wp_get_referer();
+
+            if (!$referer) {
+                $referer = get_permalink_by_slug('class-schedule');
+            }
+
             $form_data = $_POST['form_data'];
 
             simplify_serialize_data($form_data);
@@ -62,7 +69,7 @@ class Ajax
                     : (($form_data['studentpassword'] !== $form_data['studentpassword2']) ? __('did not match.') : '');
 
             }
-			
+
             /**
              * Login form validation
              */
@@ -137,60 +144,70 @@ class Ajax
 
                         if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
+
+                                Session::delete(CB_COOKIE_ENROLL);
                                 $response['redirect'] = get_permalink($form_data['class_id']) . CB_ENDPOINT_PAYMENT;
                                 wp_send_json_success($response);
+
                             } else {
                                 wp_send_json_success($response);
                             }
                         }
 
                         if (isset($response['error'])) {
+                            Session::set(CB_COOKIE_ENROLL, $form_data);
+
                             wp_send_json_success(array(
                                 'redirect' => get_permalink($form_data['class_id']) . CB_ENDPOINT_REGISTER,
                                 'message' => 'You need to login/register before you enroll to the course.'
                             ));
                         }
 
-                        wp_send_json_error(array(
-                            'message' => 'Something went wrong.'
-                        ));
-
                         break;
+
                     case 'cb_reg_form':
+                        if (Session::exist(CB_COOKIE_ENROLL)) {
+                            $form_data[CB_COOKIE_ENROLL] = Session::get(CB_COOKIE_ENROLL);
+                        }
+
                         $api_post = API::post('sign/up', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
 
                         if (isset($response['success'], $response['action']) && $response['message'] !== '') {
                             if ($response['success'] == true) {
+
+                                Session::delete(CB_COOKIE_ENROLL);
                                 wp_send_json_success($response);
+
                             } else {
                                 wp_send_json_error($response);
                             }
                         }
 
-                        wp_send_json_error(array(
-                            'message' => 'Something went wrong.'
-                        ));
-
                         break;
+
                     case 'cb_login_form':
+                        if (Session::exist(CB_COOKIE_ENROLL)) {
+                            $form_data[CB_COOKIE_ENROLL] = Session::get(CB_COOKIE_ENROLL);
+                        }
+
                         $api_post = API::post('sign/in', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
 
                         if (isset($response['success'], $response['action'])) {
                             if ($response['success'] == true) {
-                                $response['redirect'] = get_permalink_by_slug('class-schedule');
+
+                                $response['redirect'] = $referer;
+                                Session::delete(CB_COOKIE_ENROLL);
+
                                 wp_send_json_success($response);
                             } else {
                                 wp_send_json_error($response);
                             }
                         }
 
-                        wp_send_json_error(array(
-                            'message' => 'Something went wrong.'
-                        ));
-
                         break;
+
                     case 'cb_payment_form':
                         $api_post = API::post('payment/pay', $form_data);
                         $response = $api_post->jsonDecode()->getResponse();
@@ -204,17 +221,18 @@ class Ajax
                             }
                         }
 
-                        wp_send_json_error(array(
-                            'message' => 'Something went wrong.'
-                        ));
-
                         break;
+
                     default:
                         wp_send_json_error(array(
                             'message' => 'There is no event for the current action.'
                         ));
                         break;
                 }
+
+                wp_send_json_error(array(
+                    'message' => 'Something went wrong.'
+                ));
             }
         }
         exit;
@@ -239,7 +257,7 @@ class Ajax
 
         if ($response) {
             if ($response['success'] == "true") {
-                wp_send_json_success(get_permalink_by_slug('class-schedule'));
+                wp_send_json_success(get_permalink_by_slug('student-login'));
             }
         }
 
