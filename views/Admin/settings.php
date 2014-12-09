@@ -29,6 +29,12 @@
                     <p class="description">Your API key provided in ClassByte Admin</p>
                     </td>
                 </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="cb_cb_api_url">API URL</label></th>
+                    <td><input type="text" autocomplete="off" name="cb_cb_api_url" id="cb_cb_api_url" class="regular-text" value="<?php echo get_option('cb_cb_api_url'); ?>" />
+                    <p class="description">Classbyte API URL E.g: <i>http://example.com/api/</i><br><strong>Trailing slash "/" not required</strong></p>
+                    </td>
+                </tr>
             </table>
 
             <table class="form-table" id="pages">

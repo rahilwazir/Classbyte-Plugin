@@ -36,6 +36,7 @@ class Dashboard
     {
         register_setting('cb-settings', 'cb_cb_username');
         register_setting('cb-settings', 'cb_cb_api');
+        register_setting('cb-settings', 'cb_cb_api_url');
         register_setting('cb-settings', 'cb_custom_css');
         register_setting('cb-settings', 'cb_accordion_tab');
         register_setting('cb-settings', 'cb_circle_steps');
