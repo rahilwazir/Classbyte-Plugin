@@ -10,7 +10,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab">
                         <h4 class="panel-title no-margin">
-                            <button class="btn-link" href="#collapse<?php echo $course['category']['cat_id']; ?>" data-parent="#accordion" data-toggle="collapse">
+                            <button class="btn-link no-bg" href="#collapse<?php echo $course['category']['cat_id']; ?>" data-parent="#accordion" data-toggle="collapse">
                                 <?php echo $course['classes'][0]['agency'] . ' ' . $course['classes'][0]['course']; ?>
                             </button>
                         </h4>

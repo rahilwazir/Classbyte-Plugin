@@ -1,4 +1,5 @@
 <?php namespace CB; ?>
+<?php echo sign_out_link(); ?>
 <div class="table-responsive">
     <table class="table">
         <thead>
@@ -34,10 +35,9 @@
 					 	$title = strtolower ( str_replace(" ", "-", $course['coursetypename']) . '-' . date("F-d-Y", strtotime($course['coursedate'])) . '-' . str_replace(" ", "-", $course['locationcity']) . '-'. str_replace(" ", "-", $course['locationstate']). '-Class-' . $course['scheduledcoursesid']);
                         $payment_status = strtolower($course['paymentstatus']);
                         if ($payment_status == "paid") {
-                            echo '<span class="glyphicon glyphicon-ok"></span><br>';
-                            echo '<span class="label label-success">Paid</span>';
+                            echo '<span class="glyphicon glyphicon-ok"></span><br><span class="label label-success">Paid</span>';
                         } else {
-                            echo '<a href="'.home_url( '/course/'.$title.'/payment/' ).'"><button class="btn-u btn-u-orange">Pay Now</button></a>';
+                            echo '<button onclick="window.location=\'' . home_url( '/course/'.$title.'/'.CB_ENDPOINT_PAYMENT.'/' ) . '\';" class="btn-u btn-u-orange">Pay Now</button>';
                         }
                     ?>
                 </td>
